@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mô Hình Hóa Chủ Nghĩa Duy Vật Lịch Sử — Triết học Mác - Lênin (PHI1006)</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Be Vietnam Pro & Inter for crisp Vietnamese typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* Custom dot grid & smooth animations for Mind Map and 3-Tier Diagram */
+    html, body {
+      font-family: 'Be Vietnam Pro', 'Inter', system-ui, -apple-system, sans-serif;
+      overscroll-behavior: none;
+    }
+
+    .mindmap-grid {
+      background-color: #f8fafc;
+      background-image: radial-gradient(#cbd5e1 1.15px, transparent 1.15px);
+      background-size: 24px 24px;
+    }
+
+    /* Animated SVG flow arrows */
+    @keyframes flowForward {
+      from { stroke-dashoffset: 24; }
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes flowBackward {
+      from { stroke-dashoffset: 0; }
+      to { stroke-dashoffset: 24; }
+    }
+    .arrow-solid-anim {
+      stroke-dasharray: 10 4;
+      animation: flowForward 1.1s linear infinite;
+    }
+    .arrow-dashed-anim {
+      stroke-dasharray: 6 6;
+      animation: flowBackward 1.4s linear infinite;
+    }
+
+    /* Mind map node styling & hover depth */
+    .mm-node {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      transition: box-shadow 0.2s ease, border-color 0.2s ease, opacity 0.25s ease, transform 0.2s ease;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .mm-node:hover {
+      z-index: 30;
+    }
+    .mm-node.is-selected {
+      z-index: 35;
+      box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.18), 0 12px 24px -6px rgba(15, 23, 42, 0.2);
+    }
+    .mm-node.is-match {
+      z-index: 32;
+      box-shadow: 0 0 0 3px #f59e0b, 0 0 20px rgba(245, 158, 11, 0.45);
+    }
+    .mm-node.is-dimmed {
+      opacity: 0.22;
+    }
+
+    /* Custom thin scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col overflow-x-hidden">
+
+  <!-- ==================== TOP NAVIGATION BAR ==================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+    <div class="max-w-[1600px] mx-auto px-3 sm:px-5 py-2.5 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2.5">
+      <!-- Brand / Title -->
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-900 to-indigo-700 text-white flex items-center justify-center shadow-md shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+          </svg>
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="text-sm sm:text-base font-bold text-slate-900 truncate">Chủ nghĩa Duy vật Lịch sử</h1>
+            <span class="px-2 py-0.5 text-[11px] font-semibold rounded-full bg-indigo-50 text-indigo-700 border border-indigo-200">PHI1006 · Chương 3</span>
+          </div>
+          <p class="text-xs text-slate-500 truncate">Mô hình hóa 4 chuyên đề biện chứng cốt lõi — Triết học Mác - Lênin</p>
+        </div>
+      </div>
+
+      <!-- 3 Main View Tabs -->
+      <nav class="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 self-start lg:self-auto w-full lg:w-auto overflow-x-auto" role="tablist">
+        <button id="tab-btn-mindmap" data-tab="mindmap" role="tab" aria-selected="true"
+          class="tab-btn flex-1 lg:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap bg-white text-slate-900 shadow-sm">
+          <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 12h3m4 0h3M10 12V7a2 2 0 012-2h1m-3 7v5a2 2 0 002 2h1M5 12a2 2 0 11-4 0 2 2 0 014 0zm18-7a2 2 0 11-4 0 2 2 0 014 0zm0 7a2 2 0 11-4 0 2 2 0 014 0zm0 7a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span>1. Sơ đồ tư duy</span>
+        </button>
+        <button id="tab-btn-system" data-tab="system" role="tab" aria-selected="false"
+          class="tab-btn flex-1 lg:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap text-slate-600 hover:text-slate-900">
+          <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 10l9-6 9 6-9 6-9-6zm0 4l9 6 9-6" />
+          </svg>
+          <span>2. Mô hình hệ thống 3 tầng</span>
+        </button>
+        <button id="tab-btn-table" data-tab="table" role="tab" aria-selected="false"
+          class="tab-btn flex-1 lg:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all whitespace-nowrap text-slate-600 hover:text-slate-900">
+          <svg class="w-4 h-4 text-purple-600 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18M10 3v18M4 5a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H5a1 1 0 01-1-1V5z" />
+          </svg>
+          <span>3. Bảng đối chiếu tổng hợp</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT AREA ==================== -->
+  <main class="flex-1 flex flex-col relative">
+
+    <!-- ============================================================ -->
+    <!-- TAB 1: INTERACTIVE MIND MAP VIEW                             -->
+    <!-- ============================================================ -->
+    <section id="view-mindmap" class="tab-view flex-1 flex flex-col h-[calc(100vh-68px)] min-h-[580px] relative">
+      <!-- Mind Map Toolbar -->
+      <div class="bg-white border-b border-slate-200 px-3 sm:px-5 py-2 flex flex-wrap items-center justify-between gap-2 z-20">
+        <!-- Topic Filter Pills -->
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="text-xs font-semibold text-slate-500 mr-1 hidden sm:inline">Lọc chuyên đề:</span>
+          <button data-filter="all" class="filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 text-white transition">Tất cả</button>
+          <button data-filter="1" class="filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition">1. LLSX - QHSX</button>
+          <button data-filter="2" class="filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition">2. CSHT - KTTT</button>
+          <button data-filter="3" class="filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 transition">3. TTXH - YTXH</button>
+          <button data-filter="4" class="filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100 transition">4. HTKT-XH</button>
+        </div>
+
+        <!-- Search & Layout / Tree Actions -->
+        <div class="flex items-center gap-2 flex-wrap w-full xl:w-auto justify-between xl:justify-end">
+          <!-- Search input -->
+          <div class="relative flex-1 sm:flex-none sm:w-56">
+            <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+            </svg>
+            <input id="mm-search" type="text" placeholder="Tìm từ khóa (VD: công cụ, nhà nước...)"
+              class="w-full pl-8 pr-14 py-1.5 text-xs rounded-lg border border-slate-300 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition" />
+            <span id="mm-search-count" class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800"></span>
+          </div>
+
+          <!-- Layout Toggle -->
+          <div class="inline-flex rounded-lg border border-slate-200 bg-slate-100 p-0.5">
+            <button id="layout-ltr" class="px-2.5 py-1 text-xs font-semibold rounded-md bg-white text-slate-900 shadow-sm transition" title="Bố cục cây ngang (Trái sang Phải)">Ngang</button>
+            <button id="layout-radial" class="px-2.5 py-1 text-xs font-semibold rounded-md text-slate-600 hover:text-slate-900 transition" title="Bố cục tỏa tròn (Radial)">Tỏa tròn</button>
+          </div>
+
+          <!-- Expand / Collapse All -->
+          <div class="flex items-center gap-1">
+            <button id="btn-expand-all" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" title="Mở rộng toàn bộ nhánh">Mở tất cả</button>
+            <button id="btn-collapse-all" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 transition" title="Thu gọn về 4 chuyên đề chính">Thu gọn</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Canvas + Inspector Wrapper -->
+      <div class="flex-1 flex relative overflow-hidden">
+        <!-- Interactive Mind Map Viewport -->
+        <div id="mm-viewport" class="flex-1 mindmap-grid relative overflow-hidden cursor-grab active:cursor-grabbing touch-none">
+          <!-- Transformed Stage -->
+          <div id="mm-stage" class="absolute top-0 left-0 origin-top-left will-change-transform">
+            <svg id="mm-svg" class="absolute top-0 left-0 overflow-visible pointer-events-none" width="1" height="1"></svg>
+            <div id="mm-nodes" class="absolute top-0 left-0"></div>
+          </div>
+
+          <!-- Floating Zoom & Fit Controls (Bottom Left) -->
+          <div class="absolute bottom-4 left-4 z-20 flex items-center gap-1 bg-white/95 backdrop-blur border border-slate-200 rounded-xl p-1 shadow-lg">
+            <button id="btn-zoom-out" class="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-700 font-bold transition" title="Thu nhỏ (-)">−</button>
+            <span id="zoom-label" class="px-2 text-xs font-semibold text-slate-600 min-w-[48px] text-center">100%</span>
+            <button id="btn-zoom-in" class="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-700 font-bold transition" title="Phóng to (+)">+</button>
+            <div class="w-px h-5 bg-slate-200 mx-0.5"></div>
+            <button id="btn-fit" class="px-2.5 h-8 rounded-lg hover:bg-slate-100 flex items-center gap-1 text-xs font-semibold text-slate-700 transition" title="Căn giữa sơ đồ">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4" />
+              </svg>
+              <span>Căn giữa</span>
+            </button>
+          </div>
+
+          <!-- Helper hint (Top Left) -->
+          <div class="absolute top-3 left-3 z-10 pointer-events-none hidden md:flex items-center gap-2 bg-white/85 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-200/80 text-[11px] text-slate-500 shadow-sm">
+            <span>Kéo thả để di chuyển · Cuộn chuột để phóng to/thu nhỏ · Nhấn vào nút để xem chi tiết</span>
+          </div>
+        </div>
+
+        <!-- Side Drawer / Inspector ("Chi tiết kiến thức") -->
+        <aside id="mm-inspector" class="fixed lg:static inset-y-0 right-0 z-50 lg:z-20 w-full max-w-md lg:w-[390px] xl:w-[420px] bg-white border-l border-slate-200 shadow-2xl lg:shadow-none flex flex-col transform translate-x-full lg:translate-x-0 transition-transform duration-300">
+          <!-- Inspector Header -->
+          <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between bg-slate-50/80">
+            <div class="flex items-center gap-2">
+              <span id="insp-badge" class="px-2 py-0.5 text-[11px] font-bold rounded-md bg-slate-800 text-white">Tổng quan</span>
+              <h2 class="text-sm font-bold text-slate-800">Chi tiết kiến thức</h2>
+            </div>
+            <button id="btn-close-inspector" class="lg:hidden p-1.5 rounded-lg hover:bg-slate-200 text-slate-600" aria-label="Đóng bảng chi tiết">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <!-- Inspector Body -->
+          <div id="insp-content" class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+            <!-- Populated dynamically by JS -->
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 2: 3-TIER SYSTEM MODEL & 5 HTKT-XH TIMELINE              -->
+    <!-- ============================================================ -->
+    <section id="view-system" class="tab-view hidden flex-1 overflow-y-auto">
+      <div class="max-w-[1440px] mx-auto px-4 sm:px-6 py-6 space-y-8">
+
+        <!-- Section Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <span class="inline-block px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 mb-2">Kiến trúc tổng thể xã hội</span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">Mô hình Hệ thống 3 Tầng của Hình thái Kinh tế - Xã hội</h2>
+            <p class="text-sm text-slate-600 mt-1">Trực quan hóa cơ chế vận động biện chứng 2 chiều giữa <strong>LLSX ↔ QHSX (CSHT) ↔ KTTT</strong> đặt song song với trục <strong>Tồn tại xã hội ↔ Ý thức xã hội</strong>.</p>
+          </div>
+          <!-- Legend -->
+          <div class="flex flex-wrap items-center gap-4 bg-white px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm text-xs font-semibold">
+            <div class="flex items-center gap-2">
+              <svg width="32" height="12"><line x1="0" y1="6" x2="26" y2="6" stroke="#2563eb" stroke-width="2.5" class="arrow-solid-anim" /><polygon points="24,2 32,6 24,10" fill="#2563eb" /></svg>
+              <span class="text-slate-700">Chiều quyết định (Nét liền)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg width="32" height="12"><line x1="6" y1="6" x2="32" y2="6" stroke="#d97706" stroke-width="2.5" class="arrow-dashed-anim" /><polygon points="8,2 0,6 8,10" fill="#d97706" /></svg>
+              <span class="text-slate-700">Tác động trở lại / Độc lập tương đối (Nét đứt)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive 3-Tier Diagram + Detail Panel -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+          <!-- Left/Center: Visual 3-Tier + Parallel TTXH/YTXH Model -->
+          <div class="lg:col-span-8 bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-5 items-stretch">
+
+              <!-- Column A: 3-Tier HTKT-XH Pyramid/Stack (7 cols) -->
+              <div class="md:col-span-7 flex flex-col justify-between space-y-2">
+                <div class="text-xs font-bold uppercase tracking-wider text-purple-700 mb-1 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-purple-600"></span>
+                  Cấu trúc 3 tầng Hình thái KT-XH (Nhấn từng tầng để phân tích)
+                </div>
+
+                <!-- TIER 3: KTTT -->
+                <button type="button" data-layer="kttt" class="sys-layer text-left w-full p-4 rounded-2xl border-2 border-emerald-300 bg-gradient-to-r from-emerald-50 to-teal-50 hover:shadow-md transition relative group">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-600 text-white">TẦNG 3 · ĐỈNH</span>
+                    <span class="text-[11px] font-semibold text-emerald-700">Chính trị · Tư tưởng · Thiết chế</span>
+                  </div>
+                  <h3 class="text-base font-extrabold text-slate-900 mt-1.5">KIẾN TRÚC THƯỢNG TẦNG (KTTT)</h3>
+                  <p class="text-xs text-slate-600 mt-1">Quan điểm (Chính trị, Pháp quyền, Đạo đức, Triết học, Tôn giáo, Nghệ thuật) + Thiết chế (<strong>Nhà nước</strong> — quyền lực mạnh nhất, Đảng phái, Giáo hội, Đoàn thể).</p>
+                </button>
+
+                <!-- Animated Bidirectional Connector: CSHT <-> KTTT -->
+                <div class="flex items-center justify-around py-1 px-4">
+                  <div class="flex items-center gap-2 text-xs font-bold text-blue-700">
+                    <svg width="24" height="36" viewBox="0 0 24 36">
+                      <line x1="12" y1="34" x2="12" y2="8" stroke="#2563eb" stroke-width="2.5" class="arrow-solid-anim" />
+                      <polygon points="7,10 12,2 17,10" fill="#2563eb" />
+                    </svg>
+                    <span>CSHT quyết định KTTT</span>
+                  </div>
+                  <div class="flex items-center gap-2 text-xs font-bold text-amber-700">
+                    <svg width="24" height="36" viewBox="0 0 24 36">
+                      <line x1="12" y1="2" x2="12" y2="28" stroke="#d97706" stroke-width="2.5" class="arrow-dashed-anim" />
+                      <polygon points="7,26 12,34 17,26" fill="#d97706" />
+                    </svg>
+                    <span>KTTT tác động trở lại</span>
+                  </div>
+                </div>
+
+                <!-- TIER 2: QHSX / CSHT -->
+                <button type="button" data-layer="qhsx" class="sys-layer text-left w-full p-4 rounded-2xl border-2 border-cyan-300 bg-gradient-to-r from-cyan-50 to-sky-50 hover:shadow-md transition relative">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-cyan-600 text-white">TẦNG 2 · KHUNG XƯƠNG KINH TẾ</span>
+                    <span class="text-[11px] font-semibold text-cyan-800">Hình thức xã hội của sản xuất</span>
+                  </div>
+                  <h3 class="text-base font-extrabold text-slate-900 mt-1.5">QUAN HỆ SẢN XUẤT (QHSX) / CƠ SỞ HẠ TẦNG (CSHT)</h3>
+                  <p class="text-xs text-slate-600 mt-1"><strong>3 mặt QHSX:</strong> Sở hữu TLSX (quyết định), Tổ chức quản lý, Phân phối sản phẩm. <strong>CSHT:</strong> QHSX thống trị (chi phối) + QHSX tàn dư + QHSX mầm mống.</p>
+                </button>
+
+                <!-- Animated Bidirectional Connector: LLSX <-> QHSX -->
+                <div class="flex items-center justify-around py-1 px-4">
+                  <div class="flex items-center gap-2 text-xs font-bold text-blue-700">
+                    <svg width="24" height="36" viewBox="0 0 24 36">
+                      <line x1="12" y1="34" x2="12" y2="8" stroke="#2563eb" stroke-width="2.5" class="arrow-solid-anim" />
+                      <polygon points="7,10 12,2 17,10" fill="#2563eb" />
+                    </svg>
+                    <span>LLSX quyết định QHSX</span>
+                  </div>
+                  <div class="flex items-center gap-2 text-xs font-bold text-amber-700">
+                    <svg width="24" height="36" viewBox="0 0 24 36">
+                      <line x1="12" y1="2" x2="12" y2="28" stroke="#d97706" stroke-width="2.5" class="arrow-dashed-anim" />
+                      <polygon points="7,26 12,34 17,26" fill="#d97706" />
+                    </svg>
+                    <span>QHSX tác động trở lại</span>
+                  </div>
+                </div>
+
+                <!-- TIER 1: LLSX -->
+                <button type="button" data-layer="llsx" class="sys-layer text-left w-full p-4 rounded-2xl border-2 border-blue-400 bg-gradient-to-r from-blue-50 to-indigo-50 hover:shadow-md transition relative ring-2 ring-blue-500/30">
+                  <div class="flex items-center justify-between gap-2">
+                    <span class="px-2 py-0.5 rounded-md text-[11px] font-bold bg-blue-600 text-white">TẦNG 1 · NỀN TẢNG VẬT CHẤT - KỸ THUẬT</span>
+                    <span class="text-[11px] font-semibold text-blue-800">Nội dung vật chất (Động nhất)</span>
+                  </div>
+                  <h3 class="text-base font-extrabold text-slate-900 mt-1.5">LỰC LƯỢNG SẢN XUẤT (LLSX)</h3>
+                  <p class="text-xs text-slate-600 mt-1"><strong>Người lao động</strong> (nhân tố quyết định) + <strong>Tư liệu sản xuất</strong> (Công cụ lao động — cách mạng nhất, Phương tiện lao động, Đối tượng lao động). <em>KH-CN là LLSX trực tiếp.</em></p>
+                </button>
+              </div>
+
+              <!-- Column B: Parallel Axis TTXH <-> YTXH (5 cols) -->
+              <div class="md:col-span-5 flex flex-col justify-between bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                <div class="text-xs font-bold uppercase tracking-wider text-amber-700 mb-2 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                  Trục song song: Đời sống tinh thần & vật chất
+                </div>
+
+                <!-- YTXH Block -->
+                <button type="button" data-layer="ytxh" class="sys-layer text-left w-full p-4 rounded-xl border-2 border-amber-300 bg-white hover:shadow-md transition">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500 text-white">MẶT TINH THẦN</span>
+                  <h3 class="text-sm font-extrabold text-slate-900 mt-1.5">Ý THỨC XÃ HỘI (YTXH)</h3>
+                  <ul class="text-xs text-slate-600 mt-1.5 space-y-1 list-disc list-inside">
+                    <li><strong>Trình độ:</strong> YTXH thông thường (Tâm lý XH) ↔ YTXH lý luận (Hệ tư tưởng).</li>
+                    <li><strong>7 Hình thái:</strong> Chính trị, Pháp quyền, Đạo đức, Nghệ thuật, Tôn giáo, Khoa học, Triết học.</li>
+                    <li><strong>5 biểu hiện độc lập tương đối</strong>.</li>
+                  </ul>
+                </button>
+
+                <!-- Bidirectional Connector TTXH <-> YTXH -->
+                <div class="flex items-center justify-around py-3">
+                  <div class="flex flex-col items-center text-[11px] font-bold text-blue-700">
+                    <svg width="24" height="44" viewBox="0 0 24 44">
+                      <line x1="12" y1="42" x2="12" y2="8" stroke="#2563eb" stroke-width="2.5" class="arrow-solid-anim" />
+                      <polygon points="7,10 12,2 17,10" fill="#2563eb" />
+                    </svg>
+                    <span>TTXH quyết định</span>
+                  </div>
+                  <div class="flex flex-col items-center text-[11px] font-bold text-amber-700">
+                    <svg width="24" height="44" viewBox="0 0 24 44">
+                      <line x1="12" y1="2" x2="12" y2="36" stroke="#d97706" stroke-width="2.5" class="arrow-dashed-anim" />
+                      <polygon points="7,34 12,42 17,34" fill="#d97706" />
+                    </svg>
+                    <span>Độc lập tương đối</span>
+                  </div>
+                </div>
+
+                <!-- TTXH Block -->
+                <button type="button" data-layer="ttxh" class="sys-layer text-left w-full p-4 rounded-xl border-2 border-orange-300 bg-white hover:shadow-md transition">
+                  <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-600 text-white">MẶT VẬT CHẤT</span>
+                  <h3 class="text-sm font-extrabold text-slate-900 mt-1.5">TỒN TẠI XÃ HỘI (TTXH)</h3>
+                  <ul class="text-xs text-slate-600 mt-1.5 space-y-1 list-disc list-inside">
+                    <li><strong>Phương thức sản xuất vật chất</strong> (LLSX + QHSX — yếu tố <em>quyết định nhất</em>).</li>
+                    <li>Điều kiện tự nhiên, hoàn cảnh địa lý.</li>
+                    <li>Dân số và mật độ dân số.</li>
+                  </ul>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Right: Interactive Analysis Panel for Selected Layer -->
+          <div id="sys-detail-panel" class="lg:col-span-4 bg-white rounded-2xl border border-slate-200 shadow-sm p-5 space-y-4">
+            <!-- Populated dynamically by JS -->
+          </div>
+        </div>
+
+        <!-- ==================== 5 HTKT-XH TIMELINE ==================== -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-purple-700">Tiến trình lịch sử - tự nhiên</span>
+              <h3 class="text-lg sm:text-xl font-extrabold text-slate-900 mt-0.5">5 Hình thái Kinh tế - Xã hội trong Lịch sử Nhân loại</h3>
+              <p class="text-xs sm:text-sm text-slate-600">Nhấn vào từng giai đoạn để đối chiếu đặc trưng <strong>LLSX — QHSX — KTTT</strong> và cơ chế chuyển hóa biện chứng.</p>
+            </div>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-50 text-purple-800 border border-purple-200 text-xs font-semibold shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+              Tuần tự (Phổ biến) + Bỏ qua (Đặc thù)
+            </span>
+          </div>
+
+          <!-- Timeline Step Buttons -->
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5" id="timeline-steps">
+            <!-- Generated by JS -->
+          </div>
+
+          <!-- Selected Stage Detail Card -->
+          <div id="timeline-detail" class="rounded-2xl border border-purple-200 bg-gradient-to-br from-purple-50/60 via-white to-slate-50 p-5">
+            <!-- Generated by JS -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- TAB 3: COMPARISON TABLE VIEW                                 -->
+    <!-- ============================================================ -->
+    <section id="view-table" class="tab-view hidden flex-1 overflow-y-auto">
+      <div class="max-w-[1500px] mx-auto px-4 sm:px-6 py-6 space-y-5">
+        <!-- Header & Copy TSV Action -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <span class="inline-block px-2.5 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200 mb-1.5">Ôn tập & Hệ thống hóa PHI1006</span>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900">Bảng Đối chiếu Tổng hợp 4 Chuyên đề Cốt lõi</h2>
+            <p class="text-sm text-slate-600 mt-0.5">So sánh song song Khái niệm, Kết cấu, Chiều quyết định, Chiều tác động trở lại và Vận dụng thực tiễn ở Việt Nam.</p>
+          </div>
+          <button id="btn-copy-tsv"
+            class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 active:scale-[0.98] text-white text-xs sm:text-sm font-semibold shadow-sm transition shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+            </svg>
+            <span>Sao chép bảng (TSV cho Google Sheets)</span>
+          </button>
+        </div>
+
+        <!-- Comparison Table Container -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[920px]" id="comparison-table">
+              <thead>
+                <tr class="bg-slate-900 text-white text-xs uppercase tracking-wider">
+                  <th class="p-4 font-bold w-[16%] border-r border-slate-700">Chuyên đề</th>
+                  <th class="p-4 font-bold w-[23%] border-r border-slate-700">Khái niệm & Kết cấu</th>
+                  <th class="p-4 font-bold w-[20%] border-r border-slate-700">Chiều quyết định</th>
+                  <th class="p-4 font-bold w-[21%] border-r border-slate-700">Chiều tác động trở lại / Tính độc lập</th>
+                  <th class="p-4 font-bold w-[20%]">Ý nghĩa & Vận dụng ở Việt Nam</th>
+                </tr>
+              </thead>
+              <tbody id="comparison-tbody" class="divide-y divide-slate-200 text-xs sm:text-[13px] leading-relaxed">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Toast Notification (replaces alert) -->
+  <div id="toast" class="fixed bottom-5 right-5 z-[60] pointer-events-none opacity-0 translate-y-3 transition-all duration-300 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-2.5 text-xs sm:text-sm font-medium">
+    <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+    <span id="toast-msg">Đã sao chép bảng thành công!</span>
+  </div>
+
+  <!-- ==================== JAVASCRIPT APPLICATION ==================== -->
+  <script>
+    /*************************************************************************
+     * 1. COLOR PALETTES FOR THE 4 CORE TOPICS
+     *************************************************************************/
+    const TOPIC_STYLES = {
+      0: {
+        name: 'Tổng quan Chương 3',
+        nodeBg: 'bg-slate-900 text-white border-slate-900',
+        badge: 'bg-slate-900 text-white',
+        edge: '#475569',
+        pillBg: 'bg-slate-100 text-slate-800 border-slate-300',
+      },
+      1: {
+        name: 'Chuyên đề 1: LLSX - QHSX',
+        nodeBg: 'bg-white text-slate-900 border-blue-400 hover:border-blue-600',
+        level1Bg: 'bg-blue-600 text-white border-blue-700',
+        badge: 'bg-blue-600 text-white',
+        edge: '#3b82f6',
+        pillBg: 'bg-blue-50 text-blue-800 border-blue-200',
+      },
+      2: {
+        name: 'Chuyên đề 2: CSHT - KTTT',
+        nodeBg: 'bg-white text-slate-900 border-emerald-400 hover:border-emerald-600',
+        level1Bg: 'bg-emerald-600 text-white border-emerald-700',
+        badge: 'bg-emerald-600 text-white',
+        edge: '#10b981',
+        pillBg: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+      },
+      3: {
+        name: 'Chuyên đề 3: TTXH - YTXH',
+        nodeBg: 'bg-white text-slate-900 border-amber-400 hover:border-amber-600',
+        level1Bg: 'bg-amber-500 text-white border-amber-600',
+        badge: 'bg-amber-500 text-white',
+        edge: '#f59e0b',
+        pillBg: 'bg-amber-50 text-amber-800 border-amber-200',
+      },
+      4: {
+        name: 'Chuyên đề 4: HTKT-XH',
+        nodeBg: 'bg-white text-slate-900 border-purple-400 hover:border-purple-600',
+        level1Bg: 'bg-purple-600 text-white border-purple-700',
+        badge: 'bg-purple-600 text-white',
+        edge: '#9333ea',
+        pillBg: 'bg-purple-50 text-purple-800 border-purple-200',
+      },
+    };
+
+    /*************************************************************************
+     * 2. COMPLETE MIND MAP KNOWLEDGE TREE (PHI1006 - CHƯƠNG 3)
+     *************************************************************************/
+    const MINDMAP_DATA = {
+      id: 'root',
+      topic: 0,
+      title: 'CHỦ NGHĨA DUY VẬT LỊCH SỬ',
+      subtitle: 'PHI1006 · 4 Chuyên đề cốt lõi',
+      details: {
+        definition: 'Chủ nghĩa duy vật lịch sử là sự vận dụng chủ nghĩa duy vật biện chứng vào nghiên cứu đời sống xã hội và lịch sử nhân loại, tìm ra những quy luật vận động, phát triển chung nhất của xã hội loài người.',
+        structure: [
+          'Chuyên đề 1: Biện chứng giữa Lực lượng sản xuất (LLSX) và Quan hệ sản xuất (QHSX).',
+          'Chuyên đề 2: Biện chứng giữa Cơ sở hạ tầng (CSHT) và Kiến trúc thượng tầng (KTTT).',
+          'Chuyên đề 3: Biện chứng giữa Tồn tại xã hội (TTXH) và Ý thức xã hội (YTXH).',
+          'Chuyên đề 4: Sự phát triển của các Hình thái kinh tế - xã hội (HTKT-XH) là quá trình lịch sử - tự nhiên.',
+        ],
+        dialectic: {
+          forward: 'Sản xuất vật chất là cơ sở tồn tại xã hội; LLSX quyết định QHSX (CSHT), CSHT quyết định KTTT, TTXH quyết định YTXH.',
+          backward: 'QHSX tác động trở lại LLSX; KTTT bảo vệ và tác động mạnh mẽ trở lại CSHT; YTXH có tính độc lập tương đối và tác động trở lại TTXH.',
+        },
+        application: 'Là cơ sở thế giới quan duy vật và phương pháp luận khoa học cho đường lối đổi mới toàn diện ở Việt Nam: phát triển kinh tế thị trường định hướng XHCN, công nghiệp hóa - hiện đại hóa, xây dựng Nhà nước pháp quyền XHCN và nền văn hóa tiên tiến đậm đà bản sắc dân tộc.',
+        keywords: ['Chủ nghĩa duy vật lịch sử', 'Sản xuất vật chất', 'Quy luật xã hội khách quan', 'PHI1006'],
+      },
+      children: [
+        /* ==================== CHUYÊN ĐỀ 1 ==================== */
+        {
+          id: 't1',
+          topic: 1,
+          title: '1. Biện chứng LLSX & QHSX',
+          subtitle: 'Quy luật cơ bản nhất của lịch sử',
+          details: {
+            definition: 'Phương thức sản xuất là sự thống nhất biện chứng giữa hai mặt: Lực lượng sản xuất (quan hệ người - tự nhiên) và Quan hệ sản xuất (quan hệ người - người trong sản xuất).',
+            structure: [
+              'Lực lượng sản xuất (LLSX): Nội dung vật chất của phương thức sản xuất.',
+              'Quan hệ sản xuất (QHSX): Hình thức xã hội của phương thức sản xuất.',
+              'Quy luật: QHSX phải phù hợp với trình độ phát triển của LLSX.',
+            ],
+            dialectic: {
+              forward: 'LLSX giữ vai trò quyết định sự ra đời, tính chất, nội dung và sự biến đổi của QHSX.',
+              backward: 'QHSX có tính độc lập tương đối, tác động trở lại thúc đẩy (nếu phù hợp) hoặc kìm hãm (nếu không phù hợp) sự phát triển của LLSX.',
+            },
+            application: 'Đổi mới ở Việt Nam từ năm 1986: Xóa bỏ cơ chế tập trung quan liêu bao cấp (QHSX vượt trước giả tạo), chuyển sang nền kinh tế nhiều thành phần để giải phóng LLSX.',
+            keywords: ['Phương thức sản xuất', 'LLSX', 'QHSX', 'Quy luật cơ bản nhất'],
+          },
+          children: [
+            {
+              id: 't1-llsx',
+              topic: 1,
+              title: 'Khái niệm & Kết cấu LLSX',
+              subtitle: 'Người LĐ + TLSX + KH-CN',
+              details: {
+                definition: 'LLSX là năng lực thực tiễn cải biến giới tự nhiên của con người nhằm đáp ứng nhu cầu đời sống của mình; thể hiện mối quan hệ giữa con người với tự nhiên trong quá trình sản xuất.',
+                structure: [
+                  'Người lao động: Thể lực, trí lực, kinh nghiệm, kỹ năng — là nhân tố QUYẾT ĐỊNH hàng đầu của LLSX.',
+                  'Tư liệu sản xuất (TLSX): Gồm Tư liệu lao động và Đối tượng lao động.',
+                  '  • Tư liệu lao động: Công cụ lao động (yếu tố ĐỘNG NHẤT, CÁCH MẠNG NHẤT, tiêu chuẩn phân biệt các thời đại kinh tế) & Phương tiện lao động (kho bãi, đường sá, vận tải...).',
+                  '  • Đối tượng lao động: Có sẵn trong tự nhiên (đất, rừng, khoáng sản) và nhân tạo (nguyên vật liệu đã qua chế biến).',
+                  'Khoa học - công nghệ ngày nay đã trở thành LỰC LƯỢNG SẢN XUẤT TRỰC TIẾP.',
+                ],
+                dialectic: {
+                  forward: 'Người lao động chế tạo và sử dụng công cụ lao động tác động vào đối tượng lao động để tạo ra của cải vật chất.',
+                  backward: 'Công cụ lao động và khoa học - công nghệ hiện đại ngược lại đặt ra yêu cầu nâng cao trình độ tri thức, kỹ năng của người lao động.',
+                },
+                application: 'Việt Nam đẩy mạnh phát triển nguồn nhân lực chất lượng cao gắn với chuyển đổi số, kinh tế tri thức và cách mạng công nghiệp 4.0.',
+                keywords: ['Người lao động (quyết định)', 'Công cụ lao động (động nhất)', 'Đối tượng lao động', 'KH-CN là LLSX trực tiếp'],
+              },
+            },
+            {
+              id: 't1-qhsx',
+              topic: 1,
+              title: 'Khái niệm & Kết cấu QHSX',
+              subtitle: '3 mặt quan hệ người - người',
+              details: {
+                definition: 'QHSX là tổng hợp các quan hệ kinh tế - vật chất giữa người với người trong quá trình sản xuất và tái sản xuất xã hội, hình thành một cách khách quan.',
+                structure: [
+                  '1. Quan hệ sở hữu đối với tư liệu sản xuất: Là quan hệ XUẤT PHÁT, CƠ BẢN, QUYẾT ĐỊNH hai mặt còn lại (sở hữu tư nhân vs sở hữu công cộng).',
+                  '2. Quan hệ trong tổ chức và quản lý sản xuất: Trực tiếp tác động đến quá trình điều hành, phân công lao động.',
+                  '3. Quan hệ trong phân phối sản phẩm lao động: Kích thích trực tiếp lợi ích và thái độ của người lao động.',
+                ],
+                dialectic: {
+                  forward: 'Quan hệ sở hữu TLSX quyết định địa vị của các tập đoàn người trong tổ chức quản lý và phân phối sản phẩm.',
+                  backward: 'Tổ chức quản lý và phân phối hợp lý sẽ củng cố quan hệ sở hữu và kích thích sản xuất; ngược lại có thể làm biến dạng quan hệ sở hữu.',
+                },
+                application: 'Đa dạng hóa các hình thức sở hữu (toàn dân, tập thể, tư nhân, hỗn hợp) và phân phối chủ yếu theo kết quả lao động, hiệu quả kinh tế và mức đóng góp vốn.',
+                keywords: ['Quan hệ sở hữu TLSX (quyết định)', 'Tổ chức quản lý', 'Phân phối sản phẩm'],
+              },
+            },
+            {
+              id: 't1-quyluat',
+              topic: 1,
+              title: 'Quy luật phù hợp QHSX - LLSX',
+              subtitle: 'Quyết định & Tác động trở lại',
+              details: {
+                definition: 'Quy luật QHSX phù hợp với trình độ phát triển của LLSX là quy luật phổ biến, cơ bản nhất chi phối toàn bộ sự vận động và phát triển của lịch sử nhân loại.',
+                structure: [
+                  'LLSX là nội dung vật chất (thường xuyên biến đổi, phát triển).',
+                  'QHSX là hình thức xã hội (tương đối ổn định, chậm biến đổi hơn).',
+                  'Trạng thái phù hợp: QHSX là "hình thức phát triển", tạo địa bàn đầy đủ kết hợp tối ưu người lao động và TLSX.',
+                  'Trạng thái mâu thuẫn: QHSX trở thành "xiềng xích" kìm hãm LLSX → tất yếu xóa bỏ QHSX cũ, xác lập QHSX mới.',
+                ],
+                dialectic: {
+                  forward: 'LLSX quyết định QHSX: Trình độ LLSX như thế nào thì đòi hỏi QHSX tương ứng; LLSX biến đổi làm nảy sinh mâu thuẫn với QHSX cũ, đòi hỏi thay thế bằng QHSX mới.',
+                  backward: 'QHSX tác động trở lại LLSX: Phù hợp → thúc đẩy LLSX phát triển mạnh mẽ; Không phù hợp (lạc hậu hoặc "vượt trước giả tạo") → kìm hãm, thậm chí phá hoại LLSX.',
+                },
+                application: 'Giải quyết mâu thuẫn giữa LLSX và QHSX trong xã hội có giai cấp phải thông qua đấu tranh giai cấp và cách mạng xã hội. Ở Việt Nam, cải cách thể chế kinh tế luôn phải bám sát trình độ thực tế của LLSX.',
+                keywords: ['Nội dung - Hình thức', 'Xiềng xích', 'Phù hợp thúc đẩy', 'Lạc hậu / Vượt trước giả tạo'],
+              },
+            },
+            {
+              id: 't1-vandung',
+              topic: 1,
+              title: 'Ý nghĩa & Vận dụng ở Việt Nam',
+              subtitle: 'CNH-HĐH & KTTT định hướng XHCN',
+              details: {
+                definition: 'Muốn phát triển kinh tế - xã hội phải bắt đầu từ phát triển LLSX (trước hết là người lao động và công cụ lao động), đồng thời từng bước cải biến QHSX cho phù hợp.',
+                structure: [
+                  'Phát triển LLSX: Đẩy mạnh công nghiệp hóa, hiện đại hóa gắn với kinh tế tri thức; đào tạo nhân lực chất lượng cao.',
+                  'Xây dựng QHSX phù hợp: Phát triển nền kinh tế thị trường định hướng XHCN với nhiều hình thức sở hữu, nhiều thành phần kinh tế.',
+                  'Tránh chủ quan duy ý chí (áp đặt QHSX "tiên tiến giả tạo" khi LLSX còn thấp kém) và tránh bảo thủ trì trệ.',
+                ],
+                dialectic: {
+                  forward: 'Thực tiễn trình độ LLSX đa tầng ở Việt Nam đòi hỏi cơ cấu kinh tế nhiều thành phần (Kinh tế nhà nước chủ đạo, kinh tế tư nhân là động lực quan trọng...).',
+                  backward: 'Hoàn thiện thể chế kinh tế thị trường định hướng XHCN tạo hành lang pháp lý và động lực mạnh mẽ để hiện đại hóa LLSX.',
+                },
+                application: 'Đường lối Đổi mới từ Đại hội VI (1986) đến nay là minh chứng sinh động cho việc nhận thức và vận dụng đúng đắn quy luật QHSX phù hợp với trình độ phát triển của LLSX.',
+                keywords: ['Công nghiệp hóa, hiện đại hóa', 'Kinh tế thị trường định hướng XHCN', 'Nhiều thành phần kinh tế'],
+              },
+            },
+          ],
+        },
+
+        /* ==================== CHUYÊN ĐỀ 2 ==================== */
+        {
+          id: 't2',
+          topic: 2,
+          title: '2. Biện chứng CSHT & KTTT',
+          subtitle: 'Quan hệ Kinh tế ↔ Chính trị',
+          details: {
+            definition: 'Quy luật về mối quan hệ biện chứng giữa Cơ sở hạ tầng (cơ cấu kinh tế) và Kiến trúc thượng tầng (chính trị, pháp luật, tư tưởng và thiết chế tương ứng) là quy luật cơ bản thứ hai của chủ nghĩa duy vật lịch sử.',
+            structure: [
+              'Cơ sở hạ tầng (CSHT): Toàn bộ QHSX hợp thành cơ cấu kinh tế của xã hội.',
+              'Kiến trúc thượng tầng (KTTT): Hệ thống quan điểm tư tưởng xã hội + thiết chế tương ứng.',
+              'Thực chất là mối quan hệ biện chứng giữa Kinh tế và Chính trị.',
+            ],
+            dialectic: {
+              forward: 'CSHT quyết định KTTT (quyết định nguồn gốc, tính chất, cơ cấu và sự biến đổi căn bản của KTTT).',
+              backward: 'KTTT có tính độc lập tương đối, bảo vệ CSHT đã sinh ra nó và tác động mạnh mẽ trở lại CSHT (thúc đẩy hoặc kìm hãm).',
+            },
+            application: 'Ở Việt Nam: Đổi mới kinh tế là trung tâm, đồng thời đổi mới chính trị từng bước vững chắc; xây dựng Nhà nước pháp quyền XHCN của nhân dân, do nhân dân, vì nhân dân.',
+            keywords: ['Cơ sở hạ tầng', 'Kiến trúc thượng tầng', 'Kinh tế quyết định Chính trị', 'Nhà nước'],
+          },
+          children: [
+            {
+              id: 't2-csht',
+              topic: 2,
+              title: 'Khái niệm & Kết cấu CSHT',
+              subtitle: 'QHSX thống trị, tàn dư, mầm mống',
+              details: {
+                definition: 'Cơ sở hạ tầng là toàn bộ những quan hệ sản xuất hợp thành cơ cấu kinh tế của một xã hội ở giai đoạn lịch sử nhất định (Lưu ý: không đồng nhất với "kết cấu hạ tầng kỹ thuật" như đường sá, cầu cống).',
+                structure: [
+                  '1. Quan hệ sản xuất thống trị: Giữ vai trò CHỦ ĐẠO, CHI PHỐI các QHSX khác, quy định bản chất và xu hướng chung của CSHT.',
+                  '2. Quan hệ sản xuất tàn dư: Của xã hội cũ để lại.',
+                  '3. Quan hệ sản xuất mầm mống: Đại diện cho xã hội tương lai.',
+                ],
+                dialectic: {
+                  forward: 'QHSX thống trị chi phối và định hướng các QHSX tàn dư và mầm mống trong cùng một cơ cấu kinh tế.',
+                  backward: 'Sự lớn mạnh của QHSX mầm mống có thể từng bước làm biến đổi cấu trúc kinh tế, chuẩn bị tiền đề cho CSHT mới.',
+                },
+                application: 'Trong thời kỳ quá độ ở Việt Nam, CSHT mang tính quá độ với nhiều thành phần kinh tế đan xen, trong đó kinh tế nhà nước giữ vai trò chủ đạo cùng kinh tế tập thể làm nền tảng.',
+                keywords: ['Cơ cấu kinh tế', 'QHSX thống trị (đặc trưng)', 'QHSX tàn dư', 'QHSX mầm mống'],
+              },
+            },
+            {
+              id: 't2-kttt',
+              topic: 2,
+              title: 'Khái niệm & Kết cấu KTTT',
+              subtitle: 'Quan điểm tư tưởng + Thiết chế XH',
+              details: {
+                definition: 'Kiến trúc thượng tầng là toàn bộ những quan điểm tư tưởng xã hội cùng với những thiết chế xã hội tương ứng được hình thành trên một cơ sở hạ tầng nhất định.',
+                structure: [
+                  'Hệ thống quan điểm, tư tưởng xã hội: Chính trị, pháp quyền, đạo đức, tôn giáo, nghệ thuật, triết học...',
+                  'Hệ thống thiết chế xã hội tương ứng: Nhà nước, đảng phái, giáo hội, các đoàn thể, tổ chức chính trị - xã hội...',
+                  'NHÀ NƯỚC là bộ phận có quyền lực mạnh nhất, tác động trực tiếp và sâu sắc nhất đối với CSHT vì nắm trong tay bộ máy bạo lực và pháp luật.',
+                ],
+                dialectic: {
+                  forward: 'Các yếu tố chính trị, pháp luật gắn trực tiếp với CSHT; còn triết học, tôn giáo, nghệ thuật liên hệ gián tiếp hơn với CSHT.',
+                  backward: 'Trong xã hội có giai cấp, KTTT mang tính giai cấp sâu sắc; giai cấp thống trị kinh tế dùng Nhà nước để xác lập thống trị chính trị và tư tưởng.',
+                },
+                application: 'KTTT ở Việt Nam gồm hệ tư tưởng Mác - Lênin, tư tưởng Hồ Chí Minh, sự lãnh đạo của Đảng Cộng sản Việt Nam, Nhà nước pháp quyền XHCN và Mặt trận Tổ quốc cùng các đoàn thể.',
+                keywords: ['Quan điểm tư tưởng', 'Thiết chế xã hội', 'Nhà nước (mạnh nhất)', 'Tính giai cấp'],
+              },
+            },
+            {
+              id: 't2-quyluat',
+              topic: 2,
+              title: 'Quy luật biện chứng CSHT - KTTT',
+              subtitle: 'Quyết định & Độc lập tương đối',
+              details: {
+                definition: 'CSHT và KTTT thống nhất biện chứng với nhau, trong đó CSHT giữ vai trò quyết định, còn KTTT có tính độc lập tương đối và tác động mạnh mẽ trở lại CSHT.',
+                structure: [
+                  'Vai trò quyết định của CSHT: CSHT nào sinh ra KTTT ấy; mâu thuẫn kinh tế phản ánh thành mâu thuẫn chính trị - tư tưởng; CSHT biến đổi căn bản thì sớm muộn KTTT cũng biến đổi theo.',
+                  'Tác động trở lại của KTTT: Chức năng cơ bản là bảo vệ, duy trì và phát triển CSHT đã sinh ra nó.',
+                  'Hai chiều tác động của KTTT: Phù hợp quy luật kinh tế khách quan → thúc đẩy kinh tế phát triển; Ngược chiều quy luật kinh tế → kìm hãm kinh tế (nhưng xét đến cùng kinh tế vẫn quyết định).',
+                ],
+                dialectic: {
+                  forward: 'LLSX phát triển làm biến đổi QHSX (CSHT), thông qua đó làm đảo lộn căn bản KTTT (chính trị, pháp luật đổi nhanh; tôn giáo, nghệ thuật đổi chậm hơn và có tính kế thừa).',
+                  backward: 'KTTT (đặc biệt là đường lối chính trị, pháp luật, chính sách kinh tế của Nhà nước) có thể thúc đẩy tăng tốc hoặc cản trở nặng nề sự phát triển của CSHT.',
+                },
+                application: 'Nếu chính sách, pháp luật (KTTT) thông thoáng, đúng quy luật thị trường thì kinh tế bứt phá; ngược lại cơ chế quan liêu, tham nhũng sẽ kìm hãm tăng trưởng.',
+                keywords: ['CSHT nào KTTT ấy', 'Cùng chiều thúc đẩy', 'Ngược chiều kìm hãm', 'Xét đến cùng kinh tế quyết định'],
+              },
+            },
+            {
+              id: 't2-vandung',
+              topic: 2,
+              title: 'Ý nghĩa & Vận dụng ở Việt Nam',
+              subtitle: 'Đổi mới kinh tế & Chính trị',
+              details: {
+                definition: 'Giải quyết đúng đắn mối quan hệ giữa Kinh tế và Chính trị; chống tuyệt đối hóa kinh tế (duy vật kinh tế tầm thường) cũng như chống tuyệt đối hóa chính trị (duy tâm chủ quan).',
+                structure: [
+                  'Đổi mới kinh tế là trung tâm: Phát triển nền kinh tế nhiều thành phần, hội nhập quốc tế.',
+                  'Đổi mới chính trị từng bước vững chắc: Giữ vững ổn định chính trị, không đa nguyên chính trị, đa đảng đối lập.',
+                  'Xây dựng và hoàn thiện Nhà nước pháp quyền XHCN, cải cách hành chính, phòng chống tham nhũng, phát huy dân chủ.',
+                ],
+                dialectic: {
+                  forward: 'Thành tựu đổi mới kinh tế tạo nền tảng vật chất vững chắc để củng cố niềm tin chính trị và hoàn thiện hệ thống pháp luật.',
+                  backward: 'Ổn định chính trị và hoàn thiện thể chế Nhà nước pháp quyền XHCN là điều kiện tiên quyết để thu hút đầu tư và phát triển kinh tế bền vững.',
+                },
+                application: 'Bài học lớn của Đảng Cộng sản Việt Nam: Kết hợp chặt chẽ đổi mới kinh tế với đổi mới chính trị, lấy đổi mới kinh tế làm trọng tâm đồng thời từng bước đổi mới chính trị.',
+                keywords: ['Kinh tế - Chính trị', 'Đổi mới kinh tế làm trung tâm', 'Nhà nước pháp quyền XHCN'],
+              },
+            },
+          ],
+        },
+
+        /* ==================== CHUYÊN ĐỀ 3 ==================== */
+        {
+          id: 't3',
+          topic: 3,
+          title: '3. Biện chứng TTXH & YTXH',
+          subtitle: 'Đời sống vật chất ↔ Tinh thần',
+          details: {
+            definition: 'Giải quyết vấn đề cơ bản của triết học trong lĩnh vực xã hội: Tồn tại xã hội (đời sống vật chất) quyết định Ý thức xã hội (đời sống tinh thần), đồng thời Ý thức xã hội có tính độc lập tương đối và tác động trở lại Tồn tại xã hội.',
+            structure: [
+              'Tồn tại xã hội (TTXH): Phương thức sản xuất (quyết định nhất), điều kiện tự nhiên, dân số.',
+              'Ý thức xã hội (YTXH): Trình độ phản ánh (thông thường/lý luận; tâm lý XH/hệ tư tưởng) & 7 hình thái YTXH.',
+              '5 biểu hiện tính độc lập tương đối của YTXH.',
+            ],
+            dialectic: {
+              forward: 'TTXH quyết định nguồn gốc, nội dung, tính chất, đặc điểm và sự biến đổi của YTXH.',
+              backward: 'YTXH có tính độc lập tương đối (5 biểu hiện), có thể vượt trước định hướng hoặc kìm hãm sự phát triển của TTXH.',
+            },
+            application: 'Cải tạo xã hội phải tiến hành đồng thời trên cả hai mặt: phát triển đời sống vật chất (kinh tế) và xây dựng đời sống tinh thần (văn hóa, giáo dục, đạo đức, tư tưởng).',
+            keywords: ['Tồn tại xã hội', 'Ý thức xã hội', 'Tính độc lập tương đối', 'Vật chất quyết định tinh thần'],
+          },
+          children: [
+            {
+              id: 't3-ttxh',
+              topic: 3,
+              title: 'Khái niệm & Kết cấu TTXH',
+              subtitle: '3 yếu tố sinh hoạt vật chất',
+              details: {
+                definition: 'Tồn tại xã hội là toàn bộ sinh hoạt vật chất và những điều kiện sinh hoạt vật chất của xã hội, tồn tại khách quan không phụ thuộc vào ý thức xã hội.',
+                structure: [
+                  '1. Phương thức sản xuất vật chất: Là yếu tố CƠ BẢN NHẤT, QUYẾT ĐỊNH NHẤT của TTXH.',
+                  '2. Điều kiện tự nhiên, hoàn cảnh địa lý: Khí hậu, đất đai, tài nguyên, vị trí địa lý — điều kiện thường xuyên, tất yếu.',
+                  '3. Dân số và mật độ dân số: Số lượng, chất lượng, cơ cấu và tốc độ gia tăng dân số.',
+                ],
+                dialectic: {
+                  forward: 'Ba yếu tố hợp thành nền tảng vật chất khách quan quy định cách thức con người sinh sống, tư duy và tổ chức xã hội.',
+                  backward: 'Trong cùng điều kiện tự nhiên hay dân số tương đương, sự khác biệt về phương thức sản xuất sẽ quyết định trình độ phát triển khác nhau của xã hội.',
+                },
+                application: 'Muốn thay đổi thói quen, tâm lý tiểu nông lạc hậu ở Việt Nam, điều kiện căn bản nhất là công nghiệp hóa, hiện đại hóa để thay đổi phương thức sản xuất vật chất.',
+                keywords: ['Phương thức sản xuất (quyết định nhất)', 'Điều kiện tự nhiên', 'Dân số & mật độ dân số'],
+              },
+            },
+            {
+              id: 't3-ytxh',
+              topic: 3,
+              title: 'Khái niệm & Kết cấu YTXH',
+              subtitle: 'Trình độ & 7 Hình thái YTXH',
+              details: {
+                definition: 'Ý thức xã hội là mặt tinh thần của đời sống xã hội, bao gồm toàn bộ quan điểm, tư tưởng, tình cảm, tâm trạng, tập quán... của cộng đồng xã hội, nảy sinh từ TTXH và phản ánh TTXH.',
+                structure: [
+                  'Theo trình độ phản ánh:',
+                  '  • YTXH thông thường (trực tiếp, tự phát, nổi bật là Tâm lý xã hội: tình cảm, tập quán, thói quen).',
+                  '  • YTXH lý luận (khái quát, hệ thống hóa thành khái niệm, quy luật — đỉnh cao là Hệ tư tưởng mang tính tự giác, giai cấp).',
+                  'Theo nội dung & lĩnh vực phản ánh (7 hình thái YTXH): Chính trị, Pháp quyền, Đạo đức, Nghệ thuật (Thẩm mỹ), Tôn giáo, Khoa học, Triết học.',
+                ],
+                dialectic: {
+                  forward: 'Tâm lý xã hội tạo điều kiện thuận lợi cho việc tiếp thu hệ tư tưởng và làm cho lý luận bớt xơ cứng.',
+                  backward: 'Hệ tư tưởng khoa học gia tăng yếu tố trí tuệ, định hướng tâm lý xã hội phát triển lành mạnh; hệ tư tưởng phản động kích thích yếu tố tiêu cực.',
+                },
+                application: 'Công tác tư tưởng cần kết hợp lý luận khoa học (chủ nghĩa Mác - Lênin, tư tưởng Hồ Chí Minh) với việc nắm bắt sâu sắc tâm lý, tình cảm, nguyện vọng của nhân dân.',
+                keywords: ['Tâm lý xã hội', 'Hệ tư tưởng', '7 hình thái YTXH', 'Tính giai cấp của YTXH'],
+              },
+            },
+            {
+              id: 't3-doclap',
+              topic: 3,
+              title: '5 Biểu hiện Độc lập tương đối',
+              subtitle: 'Trọng tâm ôn thi PHI1006',
+              details: {
+                definition: 'Tuy do TTXH quyết định, YTXH không phản ánh thụ động mà có tính độc lập tương đối với 5 biểu hiện cơ bản sau:',
+                structure: [
+                  '(1) Thường lạc hậu hơn TTXH: Do TTXH biến đổi nhanh, do sức mạnh của thói quen/tập quán, và do lợi ích của các thế lực bảo thủ lưu giữ.',
+                  '(2) Có thể vượt trước TTXH: Những tư tưởng khoa học tiên tiến có thể dự báo tương lai, định hướng và tổ chức thực tiễn (nhưng vẫn bắt nguồn từ phản ánh đúng TTXH).',
+                  '(3) Có tính kế thừa trong phát triển: Tư tưởng thời đại sau kế thừa di sản tư tưởng thời đại trước (giải thích vì sao nước kinh tế kém hơn vẫn có thể có triết học/tư tưởng phát triển cao).',
+                  '(4) Sự tác động qua lại giữa các hình thái YTXH: Ở mỗi thời đại có một hình thái nổi trội chi phối các hình thái khác (ngày nay ý thức chính trị giữ vai trò định hướng chủ đạo).',
+                  '(5) YTXH tác động trở lại TTXH: Tư tưởng tiến bộ thúc đẩy xã hội phát triển; tư tưởng lạc hậu, phản động kìm hãm xã hội.',
+                ],
+                dialectic: {
+                  forward: 'TTXH quyết định YTXH ngay cả khi YTXH vượt trước hay kế thừa (xét đến cùng vẫn bị điều kiện kinh tế - xã hội quy định).',
+                  backward: 'Mức độ tác động trở lại của YTXH phụ thuộc vào tính đúng đắn của tư tưởng, vai trò của giai cấp mang tư tưởng và mức độ thâm nhập vào quần chúng.',
+                },
+                application: 'Kiên trì xóa bỏ hủ tục, tệ nạn, tư tưởng lạc hậu (biểu hiện 1); phát huy tư duy dự báo chiến lược (2); giữ gìn bản sắc văn hóa dân tộc gắn với tiếp thu tinh hoa nhân loại (3).',
+                keywords: ['Lạc hậu hơn', 'Vượt trước', 'Tính kế thừa', 'Tác động qua lại', 'Tác động trở lại TTXH'],
+              },
+            },
+            {
+              id: 't3-vandung',
+              topic: 3,
+              title: 'Ý nghĩa & Vận dụng thực tiễn',
+              subtitle: 'Văn hóa, Giáo dục & Con người',
+              details: {
+                definition: 'Khi giải thích các hiện tượng tinh thần phải xuất phát từ đời sống vật chất (TTXH), đồng thời phải coi trọng vai trò tích cực của đời sống tinh thần (YTXH).',
+                structure: [
+                  'Thay đổi TTXH (phát triển kinh tế, cải thiện đời sống vật chất) là điều kiện cơ bản nhất để thay đổi YTXH.',
+                  'Đầu tư phát triển giáo dục - đào tạo, khoa học - công nghệ và xây dựng nền văn hóa tiên tiến đậm đà bản sắc dân tộc.',
+                  'Kiên trì đấu tranh khắc phục tàn dư tư tưởng lạc hậu, tệ quan liêu, tham nhũng, mê tín dị đoan.',
+                ],
+                dialectic: {
+                  forward: 'Phát triển kinh tế nâng cao dân trí, tạo cơ sở vật chất cho văn hóa, giáo dục phát triển.',
+                  backward: 'Văn hóa là nền tảng tinh thần của xã hội, vừa là mục tiêu, vừa là động lực nội sinh thúc đẩy phát triển kinh tế - xã hội.',
+                },
+                application: 'Đảng ta xác định xây dựng con người Việt Nam phát triển toàn diện, phát huy giá trị văn hóa và sức mạnh con người Việt Nam trong sự nghiệp đổi mới.',
+                keywords: ['Xuất phát từ đời sống vật chất', 'Văn hóa - Giáo dục', 'Khắc phục tàn dư lạc hậu'],
+              },
+            },
+          ],
+        },
+
+        /* ==================== CHUYÊN ĐỀ 4 ==================== */
+        {
+          id: 't4',
+          topic: 4,
+          title: '4. Phát triển HTKT-XH là quá trình lịch sử - tự nhiên',
+          subtitle: 'Học thuyết Hình thái KT-XH',
+          details: {
+            definition: 'Hình thái kinh tế - xã hội là phạm trù của chủ nghĩa duy vật lịch sử dùng để chỉ xã hội ở từng giai đoạn lịch sử nhất định, với một kiểu QHSX đặc trưng phù hợp với một trình độ nhất định của LLSX và với một KTTT tương ứng được xây dựng trên những QHSX ấy.',
+            structure: [
+              '3 yếu tố cấu thành: LLSX + QHSX (CSHT) + KTTT.',
+              'Tính chất "Quá trình lịch sử - tự nhiên": Diễn ra theo quy luật khách quan.',
+              'Tiến trình 5 HTKT-XH từ thấp đến cao.',
+              'Thống nhất giữa tính phổ biến (tuần tự) và tính đặc thù (bỏ qua).',
+            ],
+            dialectic: {
+              forward: 'Sự phát triển của LLSX là nguồn gốc sâu xa dẫn đến thay đổi QHSX → thay đổi KTTT → thay thế HTKT-XH cũ bằng HTKT-XH mới cao hơn.',
+              backward: 'Các nhân tố chủ quan, truyền thống văn hóa, bối cảnh quốc tế làm cho tiến trình ở mỗi dân tộc trở nên phong phú, có thể rút ngắn hoặc "bỏ qua" một vài HTKT-XH.',
+            },
+            application: 'Cơ sở lý luận khoa học trực tiếp cho con đường quá độ lên CNXH bỏ qua chế độ TBCN ở Việt Nam.',
+            keywords: ['Hình thái KT-XH', 'Quá trình lịch sử - tự nhiên', '5 HTKT-XH', 'Quá độ bỏ qua TBCN'],
+          },
+          children: [
+            {
+              id: 't4-cautruc',
+              topic: 4,
+              title: 'Phạm trù & Cấu trúc HTKT-XH',
+              subtitle: '3 yếu tố cơ bản hợp thành',
+              details: {
+                definition: 'Xã hội không phải là tập hợp ngẫu nhiên các cá nhân mà là một cơ thể sống hoàn chỉnh, có cấu trúc chặt chẽ gồm 3 mặt cơ bản tác động qua lại lẫn nhau.',
+                structure: [
+                  '1. Lực lượng sản xuất (LLSX): Nền tảng vật chất - kỹ thuật của mỗi HTKT-XH; xét đến cùng quyết định sự hình thành và thay thế các HTKT-XH.',
+                  '2. Quan hệ sản xuất (CSHT): "Khung xương" kinh tế, tiêu chuẩn KHÁCH QUAN để phân biệt các chế độ xã hội và phân kỳ lịch sử.',
+                  '3. Kiến trúc thượng tầng (KTTT): Hệ thống chính trị, pháp luật, tư tưởng, thiết chế — công cụ bảo vệ và phát triển CSHT.',
+                ],
+                dialectic: {
+                  forward: 'LLSX quyết định QHSX (CSHT); CSHT quyết định KTTT.',
+                  backward: 'KTTT bảo vệ CSHT; QHSX mở đường hoặc kìm hãm LLSX — tạo nên tính chỉnh thể sống động của xã hội.',
+                },
+                application: 'Học thuyết HTKT-XH bác bỏ cách tiếp cận phiến diện (như chỉ phân chia theo "văn minh nông nghiệp/công nghiệp/hậu công nghiệp" mà bỏ qua quan hệ sở hữu và chế độ xã hội).',
+                keywords: ['Nền tảng vật chất - kỹ thuật', 'Khung xương kinh tế', 'Tiêu chuẩn phân kỳ lịch sử'],
+              },
+            },
+            {
+              id: 't4-lstn',
+              topic: 4,
+              title: 'Tính chất "Lịch sử - Tự nhiên"',
+              subtitle: 'Quy luật khách quan & 5 HTKT-XH',
+              details: {
+                definition: 'C.Mác khẳng định: "Sự phát triển của những hình thái kinh tế - xã hội là một quá trình lịch sử - tự nhiên" — tức là diễn ra theo các quy luật khách quan tất yếu, không phụ thuộc vào ý muốn chủ quan của con người.',
+                structure: [
+                  'Cơ chế quy luật: Sự tác động tổng hợp của quy luật QHSX phù hợp LLSX, quy luật CSHT - KTTT, đấu tranh giai cấp và cách mạng xã hội.',
+                  'Tiến trình 5 HTKT-XH từ thấp đến cao:',
+                  '  1) Cộng sản nguyên thủy → 2) Chiếm hữu nô lệ → 3) Phong kiến → 4) Tư bản chủ nghĩa → 5) Cộng sản chủ nghĩa.',
+                ],
+                dialectic: {
+                  forward: 'Quy luật xã hội tuy thông qua hoạt động có ý thức của con người nhưng mang tính tất yếu khách quan như quy luật tự nhiên.',
+                  backward: 'Con người nhận thức và vận dụng đúng quy luật khách quan có thể thúc đẩy tiến trình lịch sử phát triển nhanh hơn (đạt tới tự do).',
+                },
+                application: 'Nghiên cứu lịch sử xã hội phải tìm nguyên nhân cuối cùng từ phương thức sản xuất và quy luật khách quan, không thể giải thích bằng ý muốn của cá nhân hay lực lượng siêu nhiên.',
+                keywords: ['Quy luật khách quan', 'Đấu tranh giai cấp', 'Cách mạng xã hội', '5 HTKT-XH'],
+              },
+            },
+            {
+              id: 't4-phobien',
+              topic: 4,
+              title: 'Tuần tự (Phổ biến) & Bỏ qua (Đặc thù)',
+              subtitle: 'Con đường phát triển đa dạng',
+              details: {
+                definition: 'Quá trình lịch sử - tự nhiên của sự phát triển xã hội bao hàm sự thống nhất biện chứng giữa tính phổ biến (phát triển tuần tự của nhân loại) và tính đặc thù (phát triển "bỏ qua" ở một số quốc gia, dân tộc cụ thể).',
+                structure: [
+                  'Tính phổ biến (Tuần tự): Xét trên quy mô toàn nhân loại, lịch sử đi từ thấp đến cao qua 5 HTKT-XH.',
+                  'Tính đặc thù (Bỏ qua): Do tác động của điều kiện tự nhiên, chính trị, truyền thống văn hóa, tương quan giai cấp và bối cảnh thời đại (giao lưu quốc tế), một số dân tộc có thể bỏ qua một hoặc vài HTKT-XH.',
+                  'Lưu ý: Bản thân sự "bỏ qua" đó cũng tuân theo quy luật lịch sử - tự nhiên, không phải sự bỏ qua tùy tiện, duy ý chí.',
+                ],
+                dialectic: {
+                  forward: 'Quy luật chung của thời đại tạo ra tiền đề khách quan (khoa học, công nghệ, kinh nghiệm) cho phép các nước đi sau rút ngắn lộ trình.',
+                  backward: 'Nỗ lực chủ quan, đường lối đúng đắn của quốc gia biến khả năng "rút ngắn, bỏ qua" thành hiện thực.',
+                },
+                application: 'Lịch sử thực tế: Mỹ, Úc bỏ qua chế độ phong kiến tiến thẳng lên TBCN; Việt Nam quá độ lên CNXH bỏ qua chế độ TBCN.',
+                keywords: ['Tính phổ biến (tuần tự)', 'Tính đặc thù (bỏ qua)', 'Điều kiện thời đại'],
+              },
+            },
+            {
+              id: 't4-vn',
+              topic: 4,
+              title: 'Vận dụng ở Việt Nam',
+              subtitle: 'Quá độ lên CNXH bỏ qua TBCN',
+              details: {
+                definition: 'Con đường đi lên của nước ta là sự phát triển quá độ lên CNXH bỏ qua chế độ TBCN — hoàn toàn phù hợp với quy luật khách quan của thời đại và thực tiễn cách mạng Việt Nam.',
+                structure: [
+                  'Cái BỎ QUA: Bỏ qua việc xác lập vị trí thống trị của quan hệ sản xuất và kiến trúc thượng tầng tư bản chủ nghĩa.',
+                  'Cái KẾ THỪA: Tiếp thu, kế thừa những thành tựu mà nhân loại đã đạt được dưới chế độ TBCN, đặc biệt về khoa học - công nghệ và quản lý hiện đại để phát triển nhanh LLSX.',
+                  'Tính chất: Là sự nghiệp khó khăn, phức tạp, lâu dài qua nhiều chặng đường với sự đan xen và đấu tranh giữa cái mới và cái cũ.',
+                ],
+                dialectic: {
+                  forward: 'Độc lập dân tộc gắn liền với chủ nghĩa xã hội là sợi chỉ đỏ xuyên suốt đường lối cách mạng Việt Nam.',
+                  backward: 'Kết hợp CNH-HĐH, kinh tế thị trường định hướng XHCN, Nhà nước pháp quyền XHCN và văn hóa tiên tiến để thực hiện mục tiêu: "Dân giàu, nước mạnh, dân chủ, công bằng, văn minh".',
+                },
+                application: 'Văn kiện Đại hội IX đến Đại hội XIII của Đảng Cộng sản Việt Nam khẳng định nhất quán nhận thức khoa học về con đường quá độ bỏ qua chế độ TBCN.',
+                keywords: ['Bỏ qua vị trí thống trị QHSX & KTTT TBCN', 'Kế thừa KH-CN & quản lý', 'Thời kỳ quá độ lâu dài'],
+              },
+            },
+          ],
+        },
+      ],
+    };
+
+    /*************************************************************************
+     * 3. 3-TIER SYSTEM LAYER DETAILS & 5 HTKT-XH TIMELINE DATA
+     *************************************************************************/
+    const SYSTEM_LAYERS = {
+      llsx: {
+        badge: 'TẦNG 1 · NỀN TẢNG VẬT CHẤT - KỸ THUẬT',
+        badgeColor: 'bg-blue-600 text-white',
+        title: 'Lực lượng sản xuất (LLSX)',
+        summary: 'Biểu hiện mối quan hệ giữa con người với giới tự nhiên trong sản xuất vật chất; là yếu tố động nhất, cách mạng nhất, giữ vai trò nguồn gốc sâu xa của mọi biến đổi xã hội.',
+        points: [
+          '<strong>Người lao động:</strong> Thể lực, trí lực, kỹ năng — <em>nhân tố quyết định</em> mọi quá trình sản xuất.',
+          '<strong>Công cụ lao động:</strong> "Tri thức được vật thể hóa" — yếu tố <em>động nhất, cách mạng nhất</em>, thước đo trình độ chinh phục tự nhiên.',
+          '<strong>Khoa học - công nghệ:</strong> Ngày nay trực tiếp thâm nhập vào mọi yếu tố, trở thành <em>LLSX trực tiếp</em>.',
+        ],
+        relation: '<strong>Mũi tên đi lên (Nét liền):</strong> LLSX phát triển đến trình độ mới tất yếu đòi hỏi thay đổi QHSX cũ cho phù hợp, từ đó kéo theo sự biến đổi của CSHT và KTTT.',
+      },
+      qhsx: {
+        badge: 'TẦNG 2 · KHUNG XƯƠNG KINH TẾ',
+        badgeColor: 'bg-cyan-600 text-white',
+        title: 'Quan hệ sản xuất (QHSX) / Cơ sở hạ tầng (CSHT)',
+        summary: 'Đóng vai trò kép: Trong nội bộ phương thức sản xuất là hình thức xã hội của LLSX; trong tổng thể xã hội hợp thành Cơ sở hạ tầng (cơ cấu kinh tế) làm nền móng cho KTTT.',
+        points: [
+          '<strong>3 mặt QHSX:</strong> Sở hữu TLSX (quyết định), Tổ chức quản lý sản xuất, Phân phối sản phẩm.',
+          '<strong>Kết cấu CSHT:</strong> QHSX thống trị (giữ vai trò chi phối, đặc trưng), QHSX tàn dư và QHSX mầm mống.',
+          '<strong>Tiêu chuẩn khách quan:</strong> Là cơ sở để phân biệt bản chất các chế độ xã hội khác nhau.',
+        ],
+        relation: '<strong>Tác động 2 chiều:</strong> Vừa bị LLSX quyết định và tác động trở lại LLSX (nét đứt đi xuống), vừa trực tiếp quyết định KTTT (nét liền đi lên).',
+      },
+      kttt: {
+        badge: 'TẦNG 3 · CHÍNH TRỊ, TƯ TƯỞNG, THIẾT CHẾ',
+        badgeColor: 'bg-emerald-600 text-white',
+        title: 'Kiến trúc thượng tầng (KTTT)',
+        summary: 'Toàn bộ hệ thống quan điểm tư tưởng xã hội và các thiết chế tương ứng được dựng lên trên một CSHT nhất định, có chức năng bảo vệ, duy trì và phát triển CSHT đó.',
+        points: [
+          '<strong>Quan điểm tư tưởng:</strong> Chính trị, pháp quyền (trực tiếp với CSHT); Đạo đức, triết học, tôn giáo, nghệ thuật (gián tiếp hơn).',
+          '<strong>Thiết chế xã hội:</strong> Nhà nước, đảng phái, giáo hội, đoàn thể.',
+          '<strong>Nhà nước:</strong> Công cụ quyền lực mạnh nhất của giai cấp thống trị, tác động trực tiếp và sâu sắc nhất tới kinh tế.',
+        ],
+        relation: '<strong>Mũi tên đi xuống (Nét đứt):</strong> Tác động cùng chiều quy luật kinh tế sẽ thúc đẩy CSHT phát triển mạnh; tác động ngược chiều sẽ kìm hãm (nhưng xét đến cùng kinh tế vẫn quyết định).',
+      },
+      ttxh: {
+        badge: 'TRỤC SONG SONG · MẶT VẬT CHẤT',
+        badgeColor: 'bg-orange-600 text-white',
+        title: 'Tồn tại xã hội (TTXH)',
+        summary: 'Toàn bộ sinh hoạt vật chất và những điều kiện sinh hoạt vật chất của xã hội, tồn tại khách quan độc lập với ý thức xã hội.',
+        points: [
+          '<strong>Phương thức sản xuất vật chất (LLSX + QHSX):</strong> Yếu tố <em>cơ bản nhất, quyết định nhất</em>.',
+          '<strong>Điều kiện tự nhiên, hoàn cảnh địa lý:</strong> Môi trường tồn tại và cung cấp tài nguyên cho xã hội.',
+          '<strong>Dân số và mật độ dân số:</strong> Quy mô, chất lượng và cơ cấu dân cư ảnh hưởng trực tiếp đến sản xuất.',
+        ],
+        relation: '<strong>Mũi tên đi lên (Nét liền):</strong> TTXH quyết định nguồn gốc, nội dung, tính chất và sự biến đổi của YTXH.',
+      },
+      ytxh: {
+        badge: 'TRỤC SONG SONG · MẶT TINH THẦN',
+        badgeColor: 'bg-amber-500 text-white',
+        title: 'Ý thức xã hội (YTXH)',
+        summary: 'Mặt tinh thần của đời sống xã hội phản ánh TTXH, bao gồm cả Tâm lý xã hội (tự phát) và Hệ tư tưởng (tự giác, hệ thống hóa) với 7 hình thái cơ bản.',
+        points: [
+          '<strong>Tính độc lập tương đối (5 biểu hiện):</strong> (1) Thường lạc hậu hơn TTXH; (2) Có thể vượt trước TTXH; (3) Có tính kế thừa; (4) Tác động qua lại giữa các hình thái; (5) Tác động trở lại TTXH.',
+          '<strong>Mối liên hệ với KTTT:</strong> Các hình thái YTXH (chính trị, pháp quyền, đạo đức, triết học, tôn giáo, nghệ thuật) chính là bộ phận tư tưởng của KTTT.',
+        ],
+        relation: '<strong>Mũi tên đi xuống (Nét đứt):</strong> Tư tưởng khoa học, tiến bộ định hướng và thúc đẩy mạnh mẽ TTXH phát triển; tàn dư lạc hậu gây cản trở, trì trệ.',
+      },
+    };
+
+    const HTKTXH_TIMELINE = [
+      {
+        id: 1,
+        name: 'Cộng sản nguyên thủy',
+        short: '1. CS Nguyên thủy',
+        era: 'Khởi nguồn nhân loại',
+        llsx: 'Công cụ thô sơ bằng đá, gỗ, cung tên; săn bắt, hái lượm; trình độ rất thấp, phụ thuộc mạnh vào tự nhiên.',
+        qhsx: 'Sở hữu công cộng (công hữu) về TLSX; lao động chung, phân phối bình quân; chưa có bóc lột, chưa có giai cấp.',
+        kttt: 'Chưa có Nhà nước, pháp luật. Tổ chức quản lý bằng Thị tộc, Bộ lạc dựa trên uy tín tộc trưởng và phong tục tập quán.',
+        transition: 'Công cụ kim loại xuất hiện → năng suất tăng → có sản phẩm dư thừa → xuất hiện tư hữu và phân hóa giai cấp.',
+      },
+      {
+        id: 2,
+        name: 'Chiếm hữu nô lệ',
+        short: '2. Chiếm hữu nô lệ',
+        era: 'Thời kỳ Cổ đại',
+        llsx: 'Công cụ bằng đồng, sắt; nông nghiệp, thủ công nghiệp và thương nghiệp tách rời; phân công lao động xã hội lớn.',
+        qhsx: 'Sở hữu tư nhân của chủ nô đối với cả TLSX và bản thân người nô lệ ("công cụ biết nói"); bóc lột trực tiếp, tàn bạo.',
+        kttt: 'Nhà nước đầu tiên ra đời (Nhà nước chủ nô: quân chủ, cộng hòa quý tộc/dân chủ chủ nô); triết học cổ đại phát triển rực rỡ.',
+        transition: 'Nô lệ không có lợi ích trong lao động, phá hoại công cụ → QHSX nô lệ kìm hãm LLSX → khởi nghĩa nô lệ làm chế độ tan rã.',
+      },
+      {
+        id: 3,
+        name: 'Phong kiến',
+        short: '3. Phong kiến',
+        era: 'Thời kỳ Trung đại',
+        llsx: 'Công cụ sắt cải tiến, sức kéo gia súc, thủy lợi, nghề thủ công tinh xảo; kinh tế nông nghiệp tiểu nông là chủ đạo.',
+        qhsx: 'Địa chủ phong kiến sở hữu ruộng đất; nông dân/nông nô phụ thuộc ruộng đất và nộp địa tô (lao dịch, hiện vật, tiền).',
+        kttt: 'Nhà nước quân chủ phong kiến (tập quyền phương Đông / phân quyền phương Tây); tôn giáo và lễ giáo phong kiến thống trị tinh thần.',
+        transition: 'Công trường thủ công và kinh tế hàng hóa phát triển → mâu thuẫn giữa giai cấp tư sản mới lên với quý tộc phong kiến → Cách mạng tư sản.',
+      },
+      {
+        id: 4,
+        name: 'Tư bản chủ nghĩa',
+        short: '4. Tư bản chủ nghĩa',
+        era: 'Cận đại & Hiện đại',
+        llsx: 'Đại công nghiệp cơ khí, điện khí hóa, tự động hóa, kinh tế tri thức và KH-CN hiện đại; LLSX mang tính xã hội hóa rất cao.',
+        qhsx: 'Sở hữu tư nhân TBCN về TLSX; lao động làm thuê tự do về thân thể; bóc lột giá trị thặng dư dưới hình thức tiền công.',
+        kttt: 'Nhà nước tư sản (Cộng hòa đại nghị, tổng thống, quân chủ lập hiến); hệ tư tưởng tư sản và nền dân chủ tư sản.',
+        transition: 'Mâu thuẫn cơ bản giữa LLSX mang tính xã hội hóa ngày càng cao với chế độ chiếm hữu tư nhân TBCN → tất yếu chuyển sang HTKT-XH cao hơn.',
+      },
+      {
+        id: 5,
+        name: 'Cộng sản chủ nghĩa',
+        short: '5. Cộng sản chủ nghĩa',
+        era: 'Giai đoạn thấp: CNXH → CNCS',
+        llsx: 'Phát triển ở trình độ rất cao dựa trên nền công nghiệp hiện đại, tự động hóa và khoa học - công nghệ là LLSX trực tiếp.',
+        qhsx: 'Sở hữu công cộng (công hữu) về những TLSX chủ yếu; hợp tác bình đẳng; phân phối theo lao động (CNXH) tiến tới theo nhu cầu (CNCS).',
+        kttt: 'Nhà nước pháp quyền XHCN (của dân, do dân, vì dân) do Đảng Cộng sản lãnh đạo; hệ tư tưởng Mác - Lênin; giải phóng toàn diện con người.',
+        transition: 'Đặc thù Việt Nam: Quá độ lên CNXH bỏ qua chế độ TBCN (bỏ qua vị trí thống trị của QHSX & KTTT TBCN, kế thừa thành tựu KH-CN và quản lý của nhân loại).',
+        highlightVN: true,
+      },
+    ];
+
+    /*************************************************************************
+     * 4. COMPARISON TABLE DATA (TAB 3)
+     *************************************************************************/
+    const COMPARISON_ROWS = [
+      {
+        topic: 1,
+        title: '1. Biện chứng LLSX và QHSX',
+        concept: '• LLSX: Người lao động (quyết định) + TLSX (Công cụ LĐ động nhất, Phương tiện LĐ, Đối tượng LĐ). KH-CN là LLSX trực tiếp.\n• QHSX: 3 mặt — Sở hữu TLSX (quyết định), Tổ chức quản lý, Phân phối sản phẩm.',
+        forward: 'LLSX (nội dung vật chất) quyết định QHSX (hình thức xã hội): quyết định sự ra đời, tính chất, nội dung và sự biến đổi của QHSX; LLSX mới mâu thuẫn QHSX cũ đòi hỏi xóa bỏ QHSX cũ.',
+        backward: 'QHSX tác động trở lại LLSX: Phù hợp → thúc đẩy LLSX phát triển mạnh mẽ; Không phù hợp (lạc hậu hoặc vượt trước giả tạo) → kìm hãm, phá hoại LLSX.',
+        application: 'Phát triển LLSX làm nền tảng (CNH-HĐH, nhân lực chất lượng cao) gắn với xây dựng QHSX phù hợp (kinh tế thị trường định hướng XHCN, nhiều thành phần kinh tế).',
+      },
+      {
+        topic: 2,
+        title: '2. Biện chứng CSHT và KTTT',
+        concept: '• CSHT: Toàn bộ QHSX hợp thành cơ cấu kinh tế (QHSX thống trị chi phối, QHSX tàn dư, QHSX mầm mống).\n• KTTT: Quan điểm tư tưởng (chính trị, pháp quyền, đạo đức, tôn giáo, nghệ thuật, triết học) + Thiết chế tương ứng (Nhà nước mạnh nhất, đảng phái, giáo hội, đoàn thể).',
+        forward: 'CSHT quyết định KTTT: CSHT nào sinh ra KTTT ấy; mâu thuẫn kinh tế phản ánh thành mâu thuẫn chính trị - tư tưởng; CSHT biến đổi căn bản thì KTTT biến đổi theo.',
+        backward: 'KTTT có tính độc lập tương đối, bảo vệ CSHT sinh ra nó. Tác động cùng chiều quy luật kinh tế → thúc đẩy; ngược chiều → kìm hãm (xét đến cùng kinh tế vẫn quyết định).',
+        application: 'Giải quyết đúng quan hệ Kinh tế - Chính trị: Đổi mới kinh tế là trung tâm, đổi mới chính trị từng bước vững chắc; xây dựng Nhà nước pháp quyền XHCN.',
+      },
+      {
+        topic: 3,
+        title: '3. Biện chứng TTXH và YTXH',
+        concept: '• TTXH: PTSX vật chất (quyết định nhất), Điều kiện tự nhiên/địa lý, Dân số & mật độ dân số.\n• YTXH: Trình độ (Thông thường/Tâm lý XH vs Lý luận/Hệ tư tưởng) & 7 hình thái (chính trị, pháp quyền, đạo đức, nghệ thuật, tôn giáo, khoa học, triết học).',
+        forward: 'TTXH quyết định YTXH: Quyết định nguồn gốc, nội dung, tính chất, đặc điểm và sự biến đổi của YTXH.',
+        backward: '5 biểu hiện độc lập tương đối của YTXH: (1) Thường lạc hậu hơn TTXH; (2) Có thể vượt trước TTXH; (3) Có tính kế thừa; (4) Tác động qua lại giữa các hình thái; (5) Tác động trở lại TTXH (tích cực thúc đẩy / tiêu cực kìm hãm).',
+        application: 'Xuất phát từ đời sống vật chất khi giải thích hiện tượng tinh thần; coi trọng giáo dục, văn hóa, tư tưởng tiên tiến, kiên trì khắc phục tàn dư lạc hậu.',
+      },
+      {
+        topic: 4,
+        title: '4. Phát triển HTKT-XH là quá trình lịch sử - tự nhiên',
+        concept: '• HTKT-XH gồm 3 yếu tố cơ bản: LLSX (nền tảng vật chất - kỹ thuật) + QHSX/CSHT (khung xương kinh tế) + KTTT (chính trị, tư tưởng, thiết chế).\n• 5 HTKT-XH: CS nguyên thủy → Chiếm hữu nô lệ → Phong kiến → TBCN → CSCN.',
+        forward: 'Tuân theo quy luật khách quan (LLSX → QHSX → KTTT; đấu tranh giai cấp & cách mạng xã hội), không phụ thuộc ý muốn chủ quan.',
+        backward: 'Thống nhất giữa tính phổ biến (tuần tự của nhân loại) và tính đặc thù (quốc gia cụ thể có thể "bỏ qua" một hoặc vài HTKT-XH do điều kiện lịch sử và thời đại).',
+        application: 'Cơ sở lý luận cho con đường quá độ lên CNXH bỏ qua chế độ TBCN ở Việt Nam: bỏ qua vị trí thống trị của QHSX & KTTT TBCN, kế thừa thành tựu KH-CN và quản lý của nhân loại.',
+      },
+    ];
+
+    /*************************************************************************
+     * 5. MIND MAP STATE & ENGINE
+     *************************************************************************/
+    const state = {
+      activeTab: 'mindmap',
+      layout: 'ltr', // 'ltr' | 'radial'
+      filter: 'all', // 'all' | '1' | '2' | '3' | '4'
+      searchQuery: '',
+      selectedId: 'root',
+      collapsedIds: new Set(), // start fully expanded for immediate clarity
+      transform: { x: 0, y: 0, scale: 0.9 },
+      isPanning: false,
+      panStart: { x: 0, y: 0 },
+      nodeMap: new Map(),
+      parentMap: new Map(),
+      positionedNodes: [],
+    };
+
+    // Index all nodes and parent references for fast lookup
+    function indexTree(node, parent = null) {
+      state.nodeMap.set(node.id, node);
+      if (parent) state.parentMap.set(node.id, parent);
+      if (node.children) {
+        node.children.forEach((child) => indexTree(child, node));
+      }
+    }
+    indexTree(MINDMAP_DATA);
+
+    // Filter visibility helper
+    function getVisibleChildren(node) {
+      if (!node.children || node.children.length === 0) return [];
+      if (state.collapsedIds.has(node.id)) return [];
+      if (node.id === 'root' && state.filter !== 'all') {
+        return node.children.filter((c) => String(c.topic) === state.filter);
+      }
+      return node.children;
+    }
+
+    // Check search match
+    function nodeMatchesQuery(node, q) {
+      if (!q) return false;
+      const hay = [
+        node.title,
+        node.subtitle || '',
+        node.details.definition || '',
+        ...(node.details.structure || []),
+        node.details.application || '',
+        ...(node.details.keywords || []),
+      ]
+        .join(' ')
+        .toLowerCase();
+      return hay.includes(q);
+    }
+
+    // Compute LTR (Left-to-Right) Tree Layout
+    function computeLTRLayout() {
+      const levelX = [0, 310, 640];
+      const leafHeight = 96;
+      const positions = [];
+      const edges = [];
+
+      function calcSubtreeHeight(node) {
+        const kids = getVisibleChildren(node);
+        if (kids.length === 0) return leafHeight;
+        return kids.reduce((sum, k) => sum + calcSubtreeHeight(k), 0);
+      }
+
+      function place(node, depth, topY) {
+        const kids = getVisibleChildren(node);
+        const h = calcSubtreeHeight(node);
+        const x = levelX[depth] ?? depth * 310;
+        const y = topY + h / 2;
+        positions.push({ node, x, y, depth });
+
+        let curY = topY;
+        kids.forEach((kid) => {
+          const kh = calcSubtreeHeight(kid);
+          const childPos = place(kid, depth + 1, curY);
+          edges.push({ from: { x, y, depth, node }, to: childPos, topic: kid.topic });
+          curY += kh;
+        });
+        return { x, y, depth, node };
+      }
+
+      const totalH = calcSubtreeHeight(MINDMAP_DATA);
+      place(MINDMAP_DATA, 0, -totalH / 2);
+      return { positions, edges };
+    }
+
+    // Compute Radial Layout
+    function computeRadialLayout() {
+      const radii = [0, 290, 595];
+      const positions = [];
+      const edges = [];
+
+      function countLeaves(node) {
+        const kids = getVisibleChildren(node);
+        if (kids.length === 0) return 1;
+        return kids.reduce((sum, k) => sum + countLeaves(k), 0);
+      }
+
+      function place(node, depth, startAngle, endAngle) {
+        let x = 0;
+        let y = 0;
+        if (depth > 0) {
+          const midAngle = (startAngle + endAngle) / 2;
+          const r = radii[depth] ?? depth * 290;
+          x = Math.cos(midAngle) * r;
+          y = Math.sin(midAngle) * r;
+        }
+        const pos = { node, x, y, depth };
+        positions.push(pos);
+
+        const kids = getVisibleChildren(node);
+        if (kids.length > 0) {
+          const totalLeaves = kids.reduce((s, k) => s + countLeaves(k), 0);
+          let curAngle = startAngle;
+          kids.forEach((kid) => {
+            const share = (countLeaves(kid) / totalLeaves) * (endAngle - startAngle);
+            const childPos = place(kid, depth + 1, curAngle, curAngle + share);
+            edges.push({ from: pos, to: childPos, topic: kid.topic });
+            curAngle += share;
+          });
+        }
+        return pos;
+      }
+
+      place(MINDMAP_DATA, 0, -Math.PI / 2, (3 * Math.PI) / 2);
+      return { positions, edges };
+    }
+
+    // Render Mind Map SVG + HTML Nodes
+    function renderMindMap() {
+      const svgEl = document.getElementById('mm-svg');
+      const nodesEl = document.getElementById('mm-nodes');
+      const q = state.searchQuery.trim().toLowerCase();
+
+      const { positions, edges } = state.layout === 'ltr' ? computeLTRLayout() : computeRadialLayout();
+      state.positionedNodes = positions;
+
+      // Determine matching nodes for search highlight
+      const matchedIds = new Set();
+      if (q) {
+        positions.forEach(({ node }) => {
+          if (nodeMatchesQuery(node, q)) matchedIds.add(node.id);
+        });
+      }
+
+      // Update search count badge
+      const countBadge = document.getElementById('mm-search-count');
+      if (q) {
+        countBadge.textContent = `${matchedIds.size} kết quả`;
+        countBadge.classList.remove('hidden');
+      } else {
+        countBadge.classList.add('hidden');
+      }
+
+      // Render smooth Bezier SVG paths
+      let svgHtml = '';
+      edges.forEach(({ from, to, topic }) => {
+        const strokeColor = TOPIC_STYLES[topic]?.edge || '#94a3b8';
+        let d = '';
+        if (state.layout === 'ltr') {
+          const dx = (to.x - from.x) * 0.52;
+          d = `M ${from.x} ${from.y} C ${from.x + dx} ${from.y}, ${to.x - dx} ${to.y}, ${to.x} ${to.y}`;
+        } else {
+          // Gentle curved radial bezier
+          const mx = (from.x + to.x) * 0.5;
+          const my = (from.y + to.y) * 0.5;
+          const cx = mx * 0.85;
+          const cy = my * 0.85;
+          d = `M ${from.x} ${from.y} Q ${cx} ${cy} ${to.x} ${to.y}`;
+        }
+        const opacity = q && !matchedIds.has(to.node.id) && !matchedIds.has(from.node.id) ? '0.2' : '0.85';
+        const strokeWidth = to.depth === 1 ? 3 : 2;
+        svgHtml += `<path d="${d}" fill="none" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round" opacity="${opacity}" />`;
+      });
+      svgEl.innerHTML = svgHtml;
+
+      // Render crisp HTML nodes
+      nodesEl.innerHTML = '';
+      positions.forEach(({ node, x, y, depth }) => {
+        const style = TOPIC_STYLES[node.topic];
+        const hasChildren = node.children && node.children.length > 0;
+        const isCollapsed = state.collapsedIds.has(node.id);
+        const isSelected = state.selectedId === node.id;
+        const isMatch = matchedIds.has(node.id);
+        const isDimmed = q && matchedIds.size > 0 && !isMatch;
+
+        let colorClasses = style.nodeBg;
+        let widthClass = 'w-[225px]';
+        if (depth === 0) {
+          colorClasses = style.nodeBg;
+          widthClass = 'w-[235px]';
+        } else if (depth === 1) {
+          colorClasses = style.level1Bg;
+          widthClass = 'w-[230px]';
+        }
+
+        const el = document.createElement('div');
+        el.className = `mm-node ${widthClass} rounded-xl border-2 px-3.5 py-2.5 shadow-sm cursor-pointer ${colorClasses} ${isSelected ? 'is-selected' : ''} ${isMatch ? 'is-match' : ''} ${isDimmed ? 'is-dimmed' : ''}`;
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+        el.dataset.id = node.id;
+
+        const subtitleColor = depth <= 1 ? 'text-white/80' : 'text-slate-500';
+        const toggleBtnHtml = hasChildren && depth > 0
+          ? `<button type="button" data-toggle="${node.id}" class="mm-toggle absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white text-slate-800 border border-slate-300 shadow flex items-center justify-center text-xs font-extrabold hover:bg-slate-100 transition" title="${isCollapsed ? 'Mở nhánh' : 'Thu gọn nhánh'}">${isCollapsed ? '+' : '−'}</button>`
+          : '';
+
+        el.innerHTML = `
+          <div class="text-xs sm:text-[13px] font-bold leading-snug">${node.title}</div>
+          ${node.subtitle ? `<div class="text-[11px] mt-0.5 ${subtitleColor} leading-tight">${node.subtitle}</div>` : ''}
+          ${toggleBtnHtml}
+        `;
+
+        // Click node to inspect
+        el.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const toggleTarget = e.target.closest('.mm-toggle');
+          if (toggleTarget) {
+            const tid = toggleTarget.dataset.toggle;
+            if (state.collapsedIds.has(tid)) state.collapsedIds.delete(tid);
+            else state.collapsedIds.add(tid);
+            renderMindMap();
+            return;
+          }
+          selectNode(node.id, true);
+        });
+
+        nodesEl.appendChild(el);
+      });
+    }
+
+    // Apply Pan & Zoom transform
+    function applyStageTransform() {
+      const stage = document.getElementById('mm-stage');
+      stage.style.transform = `translate(${state.transform.x}px, ${state.transform.y}px) scale(${state.transform.scale})`;
+      document.getElementById('zoom-label').textContent = `${Math.round(state.transform.scale * 100)}%`;
+    }
+
+    // Fit Mind Map neatly inside viewport
+    function fitToScreen() {
+      const vp = document.getElementById('mm-viewport');
+      if (!vp || state.positionedNodes.length === 0) return;
+      const rect = vp.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+      state.positionedNodes.forEach(({ x, y }) => {
+        if (x - 130 < minX) minX = x - 130;
+        if (x + 130 > maxX) maxX = x + 130;
+        if (y - 45 < minY) minY = y - 45;
+        if (y + 45 > maxY) maxY = y + 45;
+      });
+
+      const contentW = Math.max(maxX - minX, 300);
+      const contentH = Math.max(maxY - minY, 200);
+      const padding = 48;
+      const scaleX = (rect.width - padding * 2) / contentW;
+      const scaleY = (rect.height - padding * 2) / contentH;
+      const scale = Math.min(Math.max(Math.min(scaleX, scaleY), 0.38), 1.08);
+
+      const centerX = (minX + maxX) / 2;
+      const centerY = (minY + maxY) / 2;
+
+      state.transform.scale = scale;
+      state.transform.x = rect.width / 2 - centerX * scale;
+      state.transform.y = rect.height / 2 - centerY * scale;
+      applyStageTransform();
+    }
+
+    // Select a node and render Inspector panel
+    function selectNode(nodeId, openMobileDrawer = false) {
+      state.selectedId = nodeId;
+      const node = state.nodeMap.get(nodeId);
+      if (!node) return;
+
+      // Update selected highlight class
+      document.querySelectorAll('.mm-node').forEach((el) => {
+        el.classList.toggle('is-selected', el.dataset.id === nodeId);
+      });
+
+      const style = TOPIC_STYLES[node.topic];
+      const badge = document.getElementById('insp-badge');
+      badge.textContent = style.name;
+      badge.className = `px-2.5 py-0.5 text-[11px] font-bold rounded-md ${style.badge}`;
+
+      const d = node.details;
+      const content = document.getElementById('insp-content');
+      content.innerHTML = `
+        <div>
+          <h3 class="text-base sm:text-lg font-extrabold text-slate-900 leading-snug">${node.title}</h3>
+          ${node.subtitle ? `<p class="text-xs font-medium text-slate-500 mt-0.5">${node.subtitle}</p>` : ''}
+        </div>
+
+        <!-- Định nghĩa -->
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">Khái niệm / Định nghĩa cốt lõi</div>
+          <p class="text-xs sm:text-[13px] text-slate-800 leading-relaxed">${d.definition}</p>
+        </div>
+
+        <!-- Cấu trúc -->
+        <div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Cấu trúc & Nội dung trọng tâm</div>
+          <ul class="space-y-1.5">
+            ${d.structure
+              .map(
+                (item) => `
+              <li class="flex items-start gap-2 text-xs sm:text-[13px] text-slate-700 leading-relaxed">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-400 mt-1.5 shrink-0"></span>
+                <span>${item}</span>
+              </li>`
+              )
+              .join('')}
+          </ul>
+        </div>
+
+        <!-- Cơ chế biện chứng 2 chiều -->
+        <div class="space-y-2">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500">Cơ chế biện chứng 2 chiều</div>
+          <div class="p-3 rounded-xl bg-blue-50/80 border border-blue-200">
+            <div class="text-[11px] font-bold text-blue-800 flex items-center gap-1.5">
+              <span>→</span> Chiều quyết định (Nét liền)
+            </div>
+            <p class="text-xs text-slate-700 mt-1 leading-relaxed">${d.dialectic.forward}</p>
+          </div>
+          <div class="p-3 rounded-xl bg-amber-50/80 border border-amber-200">
+            <div class="text-[11px] font-bold text-amber-800 flex items-center gap-1.5">
+              <span>↺</span> Chiều tác động trở lại (Nét đứt)
+            </div>
+            <p class="text-xs text-slate-700 mt-1 leading-relaxed">${d.dialectic.backward}</p>
+          </div>
+        </div>
+
+        <!-- Ví dụ & Vận dụng VN -->
+        <div class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-emerald-800 mb-1">Ví dụ & Vận dụng ở Việt Nam</div>
+          <p class="text-xs sm:text-[13px] text-slate-700 leading-relaxed">${d.application}</p>
+        </div>
+
+        <!-- Từ khóa ôn thi -->
+        <div>
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Từ khóa ôn thi PHI1006</div>
+          <div class="flex flex-wrap gap-1.5">
+            ${d.keywords
+              .map(
+                (kw) => `<span class="px-2.5 py-1 rounded-lg text-[11px] font-semibold border ${style.pillBg}">${kw}</span>`
+              )
+              .join('')}
+          </div>
+        </div>
+      `;
+
+      if (openMobileDrawer && window.innerWidth < 1024) {
+        document.getElementById('mm-inspector').classList.remove('translate-x-full');
+      }
+    }
+
+    /*************************************************************************
+     * 6. PAN & ZOOM INTERACTION HANDLERS (MOUSE & TOUCH)
+     *************************************************************************/
+    function initPanZoom() {
+      const vp = document.getElementById('mm-viewport');
+
+      // Mouse pan
+      vp.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.mm-node') || e.target.closest('button')) return;
+        state.isPanning = true;
+        state.panStart = { x: e.clientX - state.transform.x, y: e.clientY - state.transform.y };
+      });
+      window.addEventListener('mousemove', (e) => {
+        if (!state.isPanning) return;
+        state.transform.x = e.clientX - state.panStart.x;
+        state.transform.y = e.clientY - state.panStart.y;
+        applyStageTransform();
+      });
+      window.addEventListener('mouseup', () => {
+        state.isPanning = false;
+      });
+
+      // Touch pan
+      vp.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1 && !e.target.closest('.mm-node') && !e.target.closest('button')) {
+          state.isPanning = true;
+          state.panStart = {
+            x: e.touches[0].clientX - state.transform.x,
+            y: e.touches[0].clientY - state.transform.y,
+          };
+        }
+      }, { passive: true });
+      vp.addEventListener('touchmove', (e) => {
+        if (!state.isPanning || e.touches.length !== 1) return;
+        state.transform.x = e.touches[0].clientX - state.panStart.x;
+        state.transform.y = e.touches[0].clientY - state.panStart.y;
+        applyStageTransform();
+      }, { passive: true });
+      vp.addEventListener('touchend', () => {
+        state.isPanning = false;
+      });
+
+      // Wheel zoom around cursor
+      vp.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const rect = vp.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        const delta = e.deltaY < 0 ? 1.1 : 0.9;
+        const newScale = Math.min(Math.max(state.transform.scale * delta, 0.35), 2.0);
+        const ratio = newScale / state.transform.scale;
+        state.transform.x = mouseX - (mouseX - state.transform.x) * ratio;
+        state.transform.y = mouseY - (mouseY - state.transform.y) * ratio;
+        state.transform.scale = newScale;
+        applyStageTransform();
+      }, { passive: false });
+
+      // Buttons
+      document.getElementById('btn-zoom-in').addEventListener('click', () => zoomBy(1.18));
+      document.getElementById('btn-zoom-out').addEventListener('click', () => zoomBy(0.84));
+      document.getElementById('btn-fit').addEventListener('click', fitToScreen);
+    }
+
+    function zoomBy(factor) {
+      const vp = document.getElementById('mm-viewport');
+      const rect = vp.getBoundingClientRect();
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+      const newScale = Math.min(Math.max(state.transform.scale * factor, 0.35), 2.0);
+      const ratio = newScale / state.transform.scale;
+      state.transform.x = cx - (cx - state.transform.x) * ratio;
+      state.transform.y = cy - (cy - state.transform.y) * ratio;
+      state.transform.scale = newScale;
+      applyStageTransform();
+    }
+
+    /*************************************************************************
+     * 7. TAB 2: 3-TIER SYSTEM & 5 HTKT-XH TIMELINE RENDERERS
+     *************************************************************************/
+    function renderSystemLayerDetail(layerKey) {
+      const data = SYSTEM_LAYERS[layerKey];
+      if (!data) return;
+
+      document.querySelectorAll('.sys-layer').forEach((btn) => {
+        const active = btn.dataset.layer === layerKey;
+        btn.classList.toggle('ring-2', active);
+        btn.classList.toggle('ring-slate-900', active);
+        btn.classList.toggle('shadow-md', active);
+      });
+
+      const panel = document.getElementById('sys-detail-panel');
+      panel.innerHTML = `
+        <span class="inline-block px-2.5 py-1 rounded-md text-[11px] font-bold ${data.badgeColor}">${data.badge}</span>
+        <h3 class="text-lg font-extrabold text-slate-900">${data.title}</h3>
+        <p class="text-xs sm:text-[13px] text-slate-600 leading-relaxed">${data.summary}</p>
+        <div class="space-y-2 pt-1">
+          <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Thành phần & Đặc trưng</div>
+          <ul class="space-y-2">
+            ${data.points
+              .map(
+                (p) => `<li class="text-xs sm:text-[13px] text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-200/80 leading-relaxed">${p}</li>`
+              )
+              .join('')}
+          </ul>
+        </div>
+        <div class="p-3.5 rounded-xl bg-indigo-50 border border-indigo-200 text-xs sm:text-[13px] text-indigo-950 leading-relaxed">
+          ${data.relation}
+        </div>
+      `;
+    }
+
+    function renderTimeline(activeStageId = 1) {
+      const stepsEl = document.getElementById('timeline-steps');
+      stepsEl.innerHTML = HTKTXH_TIMELINE.map((st) => {
+        const active = st.id === activeStageId;
+        return `
+          <button type="button" data-stage="${st.id}"
+            class="timeline-btn text-left p-3 rounded-xl border-2 transition ${
+              active
+                ? 'border-purple-600 bg-purple-600 text-white shadow-md'
+                : 'border-slate-200 bg-slate-50 text-slate-700 hover:border-purple-300 hover:bg-purple-50/50'
+            }">
+            <div class="text-xs font-extrabold">${st.short}</div>
+            <div class="text-[11px] mt-0.5 ${active ? 'text-purple-100' : 'text-slate-500'}">${st.era}</div>
+          </button>
+        `;
+      }).join('');
+
+      stepsEl.querySelectorAll('.timeline-btn').forEach((btn) => {
+        btn.addEventListener('click', () => renderTimeline(Number(btn.dataset.stage)));
+      });
+
+      const current = HTKTXH_TIMELINE.find((s) => s.id === activeStageId);
+      const detailEl = document.getElementById('timeline-detail');
+      detailEl.innerHTML = `
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-purple-700">Hình thái kinh tế - xã hội thứ ${current.id}</span>
+            <h4 class="text-lg font-extrabold text-slate-900">${current.name}</h4>
+          </div>
+          ${
+            current.highlightVN
+              ? `<span class="px-3 py-1 rounded-full text-xs font-bold bg-red-50 text-red-700 border border-red-200">★ Quá độ bỏ qua TBCN ở Việt Nam</span>`
+              : ''
+          }
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+          <div class="bg-white p-3.5 rounded-xl border border-blue-200">
+            <div class="text-[11px] font-bold text-blue-700 uppercase mb-1">1. Lực lượng sản xuất (LLSX)</div>
+            <p class="text-xs sm:text-[13px] text-slate-700 leading-relaxed">${current.llsx}</p>
+          </div>
+          <div class="bg-white p-3.5 rounded-xl border border-cyan-200">
+            <div class="text-[11px] font-bold text-cyan-700 uppercase mb-1">2. Quan hệ sản xuất (QHSX)</div>
+            <p class="text-xs sm:text-[13px] text-slate-700 leading-relaxed">${current.qhsx}</p>
+          </div>
+          <div class="bg-white p-3.5 rounded-xl border border-emerald-200">
+            <div class="text-[11px] font-bold text-emerald-700 uppercase mb-1">3. Kiến trúc thượng tầng (KTTT)</div>
+            <p class="text-xs sm:text-[13px] text-slate-700 leading-relaxed">${current.kttt}</p>
+          </div>
+        </div>
+        <div class="mt-3.5 p-3.5 rounded-xl bg-purple-100/70 border border-purple-200 text-xs sm:text-[13px] text-purple-950 leading-relaxed">
+          <strong>Động lực chuyển hóa / Đặc trưng lịch sử:</strong> ${current.transition}
+        </div>
+      `;
+    }
+
+    /*************************************************************************
+     * 8. TAB 3: COMPARISON TABLE & COPY TSV (GOOGLE SHEETS)
+     *************************************************************************/
+    function renderComparisonTable() {
+      const tbody = document.getElementById('comparison-tbody');
+      const accentMap = {
+        1: 'border-l-4 border-l-blue-500 bg-blue-50/30',
+        2: 'border-l-4 border-l-emerald-500 bg-emerald-50/30',
+        3: 'border-l-4 border-l-amber-500 bg-amber-50/30',
+        4: 'border-l-4 border-l-purple-500 bg-purple-50/30',
+      };
+      const titleColor = {
+        1: 'text-blue-800',
+        2: 'text-emerald-800',
+        3: 'text-amber-800',
+        4: 'text-purple-800',
+      };
+
+      tbody.innerHTML = COMPARISON_ROWS.map((row) => `
+        <tr class="hover:bg-slate-50/80 transition align-top">
+          <td class="p-4 font-bold ${accentMap[row.topic]} ${titleColor[row.topic]} border-r border-slate-200">${row.title}</td>
+          <td class="p-4 text-slate-700 border-r border-slate-200 whitespace-pre-line">${row.concept}</td>
+          <td class="p-4 text-slate-700 border-r border-slate-200">${row.forward}</td>
+          <td class="p-4 text-slate-700 border-r border-slate-200">${row.backward}</td>
+          <td class="p-4 text-slate-700">${row.application}</td>
+        </tr>
+      `).join('');
+    }
+
+    function copyTableAsTSV() {
+      const headers = [
+        'Chuyên đề',
+        'Khái niệm & Kết cấu',
+        'Chiều quyết định',
+        'Chiều tác động trở lại / Tính độc lập',
+        'Ý nghĩa & Vận dụng ở Việt Nam',
+      ];
+      const cleanCell = (str) => String(str).replace(/\n/g, ' | ').replace(/\t/g, ' ');
+      const lines = [
+        headers.join('\t'),
+        ...COMPARISON_ROWS.map((r) =>
+          [r.title, r.concept, r.forward, r.backward, r.application].map(cleanCell).join('\t')
+        ),
+      ];
+      const tsv = lines.join('\n');
+
+      // Use document.execCommand('copy') for reliable iframe clipboard support
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = tsv;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('Đã sao chép bảng (TSV)! Bạn có thể dán trực tiếp (Ctrl+V) vào Google Sheets.');
+      } catch (err) {
+        showToast('Không thể sao chép tự động. Vui lòng bôi đen bảng để sao chép.');
+      }
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-msg').textContent = msg;
+      toast.classList.remove('opacity-0', 'translate-y-3', 'pointer-events-none');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-3', 'pointer-events-none');
+      }, 3200);
+    }
+
+    /*************************************************************************
+     * 9. EVENT WIRING & INITIALIZATION
+     *************************************************************************/
+    function initEvents() {
+      // Main Tabs switching
+      document.querySelectorAll('.tab-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const tab = btn.dataset.tab;
+          state.activeTab = tab;
+
+          document.querySelectorAll('.tab-btn').forEach((b) => {
+            const isActive = b.dataset.tab === tab;
+            b.setAttribute('aria-selected', String(isActive));
+            b.classList.toggle('bg-white', isActive);
+            b.classList.toggle('text-slate-900', isActive);
+            b.classList.toggle('shadow-sm', isActive);
+            b.classList.toggle('text-slate-600', !isActive);
+          });
+
+          document.querySelectorAll('.tab-view').forEach((sec) => {
+            sec.classList.toggle('hidden', sec.id !== `view-${tab}`);
+          });
+
+          if (tab === 'mindmap') {
+            requestAnimationFrame(fitToScreen);
+          }
+        });
+      });
+
+      // Topic Filters
+      document.querySelectorAll('.filter-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.filter = btn.dataset.filter;
+          document.querySelectorAll('.filter-btn').forEach((b) => {
+            const active = b.dataset.filter === state.filter;
+            if (b.dataset.filter === 'all') {
+              b.className = active
+                ? 'filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 text-white transition'
+                : 'filter-btn px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 transition';
+            } else {
+              b.classList.toggle('ring-2', active);
+              b.classList.toggle('ring-slate-900', active);
+            }
+          });
+          // Ensure filtered topic is expanded
+          if (state.filter !== 'all') {
+            state.collapsedIds.delete(`t${state.filter}`);
+          }
+          renderMindMap();
+          fitToScreen();
+        });
+      });
+
+      // Layout Toggle (LTR vs Radial)
+      const btnLtr = document.getElementById('layout-ltr');
+      const btnRadial = document.getElementById('layout-radial');
+      btnLtr.addEventListener('click', () => {
+        state.layout = 'ltr';
+        btnLtr.className = 'px-2.5 py-1 text-xs font-semibold rounded-md bg-white text-slate-900 shadow-sm transition';
+        btnRadial.className = 'px-2.5 py-1 text-xs font-semibold rounded-md text-slate-600 hover:text-slate-900 transition';
+        renderMindMap();
+        fitToScreen();
+      });
+      btnRadial.addEventListener('click', () => {
+        state.layout = 'radial';
+        btnRadial.className = 'px-2.5 py-1 text-xs font-semibold rounded-md bg-white text-slate-900 shadow-sm transition';
+        btnLtr.className = 'px-2.5 py-1 text-xs font-semibold rounded-md text-slate-600 hover:text-slate-900 transition';
+        renderMindMap();
+        fitToScreen();
+      });
+
+      // Expand / Collapse All
+      document.getElementById('btn-expand-all').addEventListener('click', () => {
+        state.collapsedIds.clear();
+        renderMindMap();
+        fitToScreen();
+      });
+      document.getElementById('btn-collapse-all').addEventListener('click', () => {
+        state.collapsedIds = new Set(['t1', 't2', 't3', 't4']);
+        renderMindMap();
+        fitToScreen();
+      });
+
+      // Quick Search
+      const searchInput = document.getElementById('mm-search');
+      searchInput.addEventListener('input', (e) => {
+        state.searchQuery = e.target.value;
+        if (state.searchQuery.trim()) {
+          // Auto-expand all branches so matching children are visible
+          state.collapsedIds.clear();
+        }
+        renderMindMap();
+      });
+
+      // Mobile Inspector Close
+      document.getElementById('btn-close-inspector').addEventListener('click', () => {
+        document.getElementById('mm-inspector').classList.add('translate-x-full');
+      });
+
+      // 3-Tier System Layer clicks
+      document.querySelectorAll('.sys-layer').forEach((btn) => {
+        btn.addEventListener('click', () => renderSystemLayerDetail(btn.dataset.layer));
+      });
+
+      // Copy TSV button
+      document.getElementById('btn-copy-tsv').addEventListener('click', copyTableAsTSV);
+
+      // Re-fit on window resize
+      window.addEventListener('resize', () => {
+        if (state.activeTab === 'mindmap') fitToScreen();
+      });
+    }
+
+    // Boot Application
+    window.addEventListener('DOMContentLoaded', () => {
+      initPanZoom();
+      initEvents();
+      renderMindMap();
+      selectNode('root', false);
+      renderSystemLayerDetail('llsx');
+      renderTimeline(1);
+      renderComparisonTable();
+      requestAnimationFrame(fitToScreen);
+    });
+  </script>
+</body>
+</html>
